@@ -1,4 +1,4 @@
-package myProj.model;
+package myProj.dto;
 
 import java.sql.Date;
 

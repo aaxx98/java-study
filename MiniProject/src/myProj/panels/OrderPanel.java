@@ -4,12 +4,11 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import myProj.dao.OrderDAO;
-import myProj.model.OrderSummary;
+import myProj.dto.OrderSummary;
 import myProj.panels.dialogs.OrderDetailDialog;
 import myProj.panels.dialogs.OrderNewDialog;
 

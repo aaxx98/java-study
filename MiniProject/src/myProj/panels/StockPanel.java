@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import myProj.dao.StockDAO;
-import myProj.model.Stock;
+import myProj.dto.Stock;
 import myProj.panels.dialogs.ProductStockDialog;
 
 public class StockPanel extends JPanel {

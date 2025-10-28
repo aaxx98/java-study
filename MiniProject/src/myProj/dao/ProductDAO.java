@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import myProj.db.DBConnection;
-import myProj.model.Product;
+import myProj.dto.Product;
 import myProj.db.DBUtil;
 
 public class ProductDAO {

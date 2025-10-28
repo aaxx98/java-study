@@ -3,11 +3,10 @@ package myProj.panels;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
 import myProj.dao.ProductDAO;
-import myProj.model.Product;
+import myProj.dto.Product;
 import myProj.panels.dialogs.ProductAddDialog;
 import myProj.panels.dialogs.ProductDeleteDialog;
 import myProj.panels.dialogs.ProductEditDialog;

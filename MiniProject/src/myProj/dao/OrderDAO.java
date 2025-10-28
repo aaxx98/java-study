@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import myProj.db.DBConnection;
-import myProj.model.*;
+import myProj.dto.*;
 import myProj.db.DBUtil;
 
 public class OrderDAO {

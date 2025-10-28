@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 import myProj.dao.OrderDAO;
-import myProj.model.*;
+import myProj.dto.*;
 
 public class OrderDetailDialog extends JDialog {
 

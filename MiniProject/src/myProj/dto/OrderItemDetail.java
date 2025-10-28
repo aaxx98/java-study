@@ -1,4 +1,4 @@
-package myProj.model;
+package myProj.dto;
 
 public class OrderItemDetail {
 

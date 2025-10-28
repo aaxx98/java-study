@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.List;
 
 import myProj.dao.OrderDAO;
-import myProj.model.*;
+import myProj.dto.*;
 
 public class OrderNewDialog extends JDialog {
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import myProj.db.DBConnection;
-import myProj.model.Stock;
+import myProj.dto.Stock;
 import myProj.db.DBUtil;
 
 public class StockDAO {

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.List;
 
 import myProj.dao.ProductDAO;
-import myProj.model.Product;
+import myProj.dto.Product;
 
 public class ProductStockDialog extends JDialog {
 

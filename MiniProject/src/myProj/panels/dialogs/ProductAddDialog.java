@@ -3,7 +3,7 @@ package myProj.panels.dialogs;
 import javax.swing.*;
 import java.awt.*;
 
-import myProj.model.Product;
+import myProj.dto.Product;
 
 public class ProductAddDialog extends JDialog {
 
