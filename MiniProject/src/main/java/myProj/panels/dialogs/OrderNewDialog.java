@@ -1,22 +1,34 @@
 package myProj.panels.dialogs;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.util.List;
-
-import myProj.dao.OrderDAO;
-import myProj.dto.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import myProj.dto.OrderItemDetailDTO;
+import myProj.dto.ProductDTO;
+import myProj.service.OrderService;
 
 public class OrderNewDialog extends JDialog {
 
   private JTable itemTable;
   private DefaultTableModel tableModel;
   private JLabel totalLabel;
-  private final OrderDAO orderDAO = new OrderDAO();
+  private final OrderService orderService;
 
-  public OrderNewDialog(JFrame parent) {
+  public OrderNewDialog(
+      OrderService orderService,
+      JFrame parent
+  ) {
     super(parent, "새 주문 추가", true);
+    this.orderService = orderService;
+
     setSize(600, 400);
     setLocationRelativeTo(parent);
     setLayout(new BorderLayout(10, 10));
@@ -72,10 +84,10 @@ public class OrderNewDialog extends JDialog {
   }
 
   private void loadProducts() {
-    List<Product> products = orderDAO.getAllProducts();
+    List<ProductDTO> products = orderService.getAllProducts();
     tableModel.setRowCount(0);
-    for (Product p : products) {
-      tableModel.addRow(new Object[]{p.id, p.name, 0, p.price, 0, "+", "−"});
+    for (ProductDTO p : products) {
+      tableModel.addRow(new Object[]{p.id(), p.name(), 0, p.price(), 0, "+", "−"});
     }
   }
 
@@ -94,14 +106,14 @@ public class OrderNewDialog extends JDialog {
   }
 
   private void saveOrder() {
-    List<OrderItemDetail> items = new java.util.ArrayList<>();
+    List<OrderItemDetailDTO> items = new java.util.ArrayList<>();
     for (int i = 0; i < tableModel.getRowCount(); i++) {
       int qty = (int) tableModel.getValueAt(i, 2);
       if (qty > 0) {
         int id = (int) tableModel.getValueAt(i, 0);
         String name = (String) tableModel.getValueAt(i, 1);
         int price = (int) tableModel.getValueAt(i, 3);
-        items.add(new OrderItemDetail(id, name, qty, price));
+        items.add(new OrderItemDetailDTO(id, name, qty, price));
       }
     }
 
@@ -110,7 +122,7 @@ public class OrderNewDialog extends JDialog {
       return;
     }
 
-    orderDAO.insertOrder(items);
+    orderService.createOrder(items);
     dispose();
   }
 }

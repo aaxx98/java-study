@@ -6,21 +6,26 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-import myProj.dao.OrderDAO;
 import myProj.dto.*;
+import myProj.service.OrderService;
 
 public class OrderDetailDialog extends JDialog {
 
   private final int orderId;
-  private final OrderDAO orderDAO = new OrderDAO();
+  private final OrderService orderService;
 
   private JComboBox<String> statusCombo;
   private JTable itemTable;
   private DefaultTableModel tableModel;
 
-  public OrderDetailDialog(JFrame parent, OrderSummary orderSummary) {
+  public OrderDetailDialog(
+      OrderService orderService,
+      JFrame parent,
+      OrderSummaryDTO orderSummary
+  ) {
     super(parent, "주문 상세보기", true);
-    this.orderId = orderSummary.id;
+    this.orderService = orderService;
+    this.orderId = orderSummary.id();
 
     setSize(500, 400);
     setLocationRelativeTo(parent);
@@ -29,13 +34,13 @@ public class OrderDetailDialog extends JDialog {
     JPanel topPanel = new JPanel(new GridLayout(2, 2, 5, 5));
 
     topPanel.add(new JLabel("주문 ID:"));
-    topPanel.add(new JLabel(String.valueOf(orderSummary.id)));
+    topPanel.add(new JLabel(String.valueOf(orderSummary.id())));
     topPanel.add(new JLabel("주문 날짜:"));
-    topPanel.add(new JLabel(orderSummary.orderDate.toString()));
+    topPanel.add(new JLabel(orderSummary.orderDate().toString()));
     topPanel.add(new JLabel("주문 상태:"));
     topPanel.add(new JLabel(orderSummary.getStatusString()));
     topPanel.add(new JLabel("가격 합계:"));
-    topPanel.add(new JLabel(String.valueOf(orderSummary.totalPrice)));
+    topPanel.add(new JLabel(String.valueOf(orderSummary.totalPrice())));
 
     add(topPanel, BorderLayout.NORTH);
 
@@ -69,8 +74,8 @@ public class OrderDetailDialog extends JDialog {
 
     statusCombo = new JComboBox<>(statusMap.values().toArray(new String[0]));
     for (Map.Entry<String, String> entry : statusMap.entrySet()) {
-      if (entry.getKey().equals(orderSummary.status)) {
-        statusCombo.setSelectedItem(statusMap.get(orderSummary.status));
+      if (entry.getKey().equals(orderSummary.status())) {
+        statusCombo.setSelectedItem(statusMap.get(orderSummary.status()));
         break;
       }
     }
@@ -85,13 +90,13 @@ public class OrderDetailDialog extends JDialog {
   }
 
   private void loadOrderItems() {
-    List<OrderItemDetail> items = orderDAO.getOrderItems(orderId);
+    List<OrderItemDetailDTO> items = orderService.getOrderItems(orderId);
     tableModel.setRowCount(0);
-    for (OrderItemDetail item : items) {
+    for (OrderItemDetailDTO item : items) {
       tableModel.addRow(new Object[]{
-          item.productName,
-          item.quantity,
-          item.price
+          item.productName(),
+          item.quantity(),
+          item.price()
       });
     }
   }
@@ -108,7 +113,7 @@ public class OrderDetailDialog extends JDialog {
       newStatus = "COMPLETE";
     }
 
-    orderDAO.updateStatus(orderId, newStatus);
+    orderService.updateOrderStatus(orderId, newStatus);
     dispose();
   }
 }

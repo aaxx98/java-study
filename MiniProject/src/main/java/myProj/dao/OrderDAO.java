@@ -11,8 +11,8 @@ import myProj.db.DBUtil;
 
 public class OrderDAO {
 
-  public List<OrderSummary> getOrdersByDate(LocalDate date) {
-    List<OrderSummary> list = new ArrayList<>();
+  public List<OrderSummaryDTO> getOrdersByDate(LocalDate date) {
+    List<OrderSummaryDTO> list = new ArrayList<>();
 
     String sql = """
         SELECT o.id, o.order_date, o.status, SUM(oi.quantity) AS item_count, SUM(oi.price * oi.quantity) AS total_price
@@ -29,9 +29,9 @@ public class OrderDAO {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        list.add(new OrderSummary(
+        list.add(new OrderSummaryDTO(
             rs.getInt("id"),
-            rs.getDate("order_date"),
+            rs.getDate("order_date").toLocalDate(),
             rs.getString("status"),
             rs.getInt("item_count"),
             rs.getInt("total_price")
@@ -44,8 +44,8 @@ public class OrderDAO {
     return list;
   }
 
-  public List<OrderItemDetail> getOrderItems(int orderId) {
-    List<OrderItemDetail> list = new ArrayList<>();
+  public List<OrderItemDetailDTO> getOrderItems(int orderId) {
+    List<OrderItemDetailDTO> list = new ArrayList<>();
 
     String sql = """
         SELECT p.id AS product_id, p.name AS product_name, oi.quantity, oi.price
@@ -61,7 +61,7 @@ public class OrderDAO {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        list.add(new OrderItemDetail(
+        list.add(new OrderItemDetailDTO(
             rs.getInt("product_id"),
             rs.getString("product_name"),
             rs.getInt("quantity"),
@@ -87,18 +87,19 @@ public class OrderDAO {
     }
   }
 
-  public List<Product> getAllProducts() {
-    List<Product> products = new java.util.ArrayList<>();
+  public List<ProductDTO> getAllProducts() {
+    List<ProductDTO> products = new java.util.ArrayList<>();
     String sql = "SELECT id, name, category, price FROM Products";
     try (Connection conn = DBConnection.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
-        products.add(new Product(
+        products.add(new ProductDTO(
             rs.getInt("id"),
             rs.getString("name"),
             rs.getString("category"),
-            rs.getInt("price")
+            rs.getInt("price"),
+            false
         ));
       }
     } catch (SQLException e) {
@@ -107,7 +108,7 @@ public class OrderDAO {
     return products;
   }
 
-  public void insertOrder(List<OrderItemDetail> items) {
+  public void insertOrder(List<OrderItemDetailDTO> items) {
     try (Connection conn = DBConnection.getConnection()) {
       conn.setAutoCommit(false);
 
@@ -130,11 +131,11 @@ public class OrderDAO {
       // 주문 항목 추가
       String itemSql = "INSERT INTO OrderItems(order_id, product_id, quantity, price) VALUES(?, ?, ?, ?)";
       try (PreparedStatement ps = conn.prepareStatement(itemSql)) {
-        for (OrderItemDetail item : items) {
+        for (OrderItemDetailDTO item : items) {
           ps.setInt(1, orderId);
-          ps.setInt(2, item.productId);
-          ps.setInt(3, item.quantity);
-          ps.setInt(4, item.price);
+          ps.setInt(2, item.productId());
+          ps.setInt(3, item.quantity());
+          ps.setInt(4, item.price());
           ps.addBatch();
         }
         ps.executeBatch();
@@ -146,12 +147,12 @@ public class OrderDAO {
       try (PreparedStatement checkPs = conn.prepareStatement(stockCheckSql);
           PreparedStatement updatePs = conn.prepareStatement(stockUpdateSql)) {
 
-        for (OrderItemDetail item : items) {
-          checkPs.setInt(1, item.productId);
+        for (OrderItemDetailDTO item : items) {
+          checkPs.setInt(1, item.productId());
           try (ResultSet rs = checkPs.executeQuery()) {
             if (rs.next() && rs.getInt("stock_manage") == 1) {
-              updatePs.setInt(1, item.quantity);
-              updatePs.setInt(2, item.productId);
+              updatePs.setInt(1, item.quantity());
+              updatePs.setInt(2, item.productId());
               updatePs.executeUpdate();
             }
           }

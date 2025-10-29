@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.List;
 
 import myProj.dao.ProductDAO;
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 
 public class ProductStockDialog extends JDialog {
 
@@ -53,12 +53,12 @@ public class ProductStockDialog extends JDialog {
 
   private void loadProducts() {
     tableModel.setRowCount(0);
-    List<Product> products = productDAO.getAllProducts("", "");
-    for (Product p : products) {
+    List<ProductDTO> products = productDAO.getAllProducts("", "");
+    for (ProductDTO p : products) {
       tableModel.addRow(new Object[]{
-          p.id,
-          p.name,
-          p.stockManage ? "예" : "아니오"
+          p.id(),
+          p.name(),
+          p.stockManage() ? "예" : "아니오"
       });
     }
   }

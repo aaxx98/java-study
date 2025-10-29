@@ -3,15 +3,14 @@ package myProj.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import myProj.db.DBConnection;
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 import myProj.db.DBUtil;
 
 public class ProductDAO {
 
-  public List<Product> getAllProducts(String name, String category) {
-    List<Product> products = new ArrayList<>();
+  public List<ProductDTO> getAllProducts(String name, String category) {
+    List<ProductDTO> products = new ArrayList<>();
     String sql = "SELECT * FROM Products WHERE name LIKE ? AND category LIKE ?";
 
     try (Connection conn = DBConnection.getConnection();
@@ -21,13 +20,13 @@ public class ProductDAO {
 
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          Product p = new Product(
+          ProductDTO p = new ProductDTO(
               rs.getInt("id"),
               rs.getString("name"),
               rs.getString("category"),
-              rs.getInt("price")
+              rs.getInt("price"),
+              rs.getBoolean("stock_manage")
           );
-          p.setStockManage(rs.getBoolean("stock_manage"));
           products.add(p);
         }
       }
@@ -38,14 +37,14 @@ public class ProductDAO {
     return products;
   }
 
-  public void addProduct(Product p) {
+  public void addProduct(ProductDTO p) {
     String sql = "INSERT INTO Products(name, category, price) VALUES (?, ?, ?)";
     try (Connection conn = DBConnection.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-      ps.setString(1, p.name);
-      ps.setString(2, p.category);
-      ps.setInt(3, p.price);
+      ps.setString(1, p.name());
+      ps.setString(2, p.category());
+      ps.setInt(3, p.price());
       ps.executeUpdate();
 
     } catch (SQLException e) {
@@ -53,15 +52,15 @@ public class ProductDAO {
     }
   }
 
-  public void editProduct(Product p) {
+  public void editProduct(ProductDTO p) {
     String sql = "UPDATE Products SET name = ?, category = ?, price = ? WHERE id = ?";
     try (Connection conn = DBConnection.getConnection();
         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-      ps.setString(1, p.name);
-      ps.setString(2, p.category);
-      ps.setInt(3, p.price);
-      ps.setInt(4, p.id);
+      ps.setString(1, p.name());
+      ps.setString(2, p.category());
+      ps.setInt(3, p.price());
+      ps.setInt(4, p.id());
       ps.executeUpdate();
 
     } catch (SQLException e) {

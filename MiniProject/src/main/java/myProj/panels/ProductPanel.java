@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.List;
 
 import myProj.dao.ProductDAO;
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 import myProj.panels.dialogs.ProductAddDialog;
 import myProj.panels.dialogs.ProductDeleteDialog;
 import myProj.panels.dialogs.ProductEditDialog;
@@ -77,13 +77,13 @@ public class ProductPanel extends JPanel {
 
   private void loadProducts(String name, String category) {
     tableModel.setRowCount(0);
-    List<Product> products = productDAO.getAllProducts(name, category);
-    for (Product p : products) {
+    List<ProductDTO> products = productDAO.getAllProducts(name, category);
+    for (ProductDTO p : products) {
       tableModel.addRow(new Object[]{
-          p.id,
-          p.name,
-          p.category,
-          p.price
+          p.id(),
+          p.name(),
+          p.category(),
+          p.price()
       });
     }
   }
@@ -93,7 +93,7 @@ public class ProductPanel extends JPanel {
     ProductAddDialog dialog = new ProductAddDialog((JFrame) SwingUtilities.getWindowAncestor(this));
     dialog.setVisible(true);
 
-    Product p = dialog.getProduct();
+    ProductDTO p = dialog.getProduct();
     if (p != null) {
       productDAO.addProduct(p);
       init();
@@ -110,13 +110,13 @@ public class ProductPanel extends JPanel {
     String name = (String) tableModel.getValueAt(row, 1);
     String category = (String) tableModel.getValueAt(row, 2);
     int price = (int) tableModel.getValueAt(row, 3);
-    Product product = new Product(id, name, category, price);
+    ProductDTO product = new ProductDTO(id, name, category, price, false);
 
     ProductEditDialog dialog = new ProductEditDialog(
         (JFrame) SwingUtilities.getWindowAncestor(this), product);
     dialog.setVisible(true);
 
-    Product p = dialog.getProduct();
+    ProductDTO p = dialog.getProduct();
     if (p != null) {
       productDAO.editProduct(p);
       init();
@@ -131,14 +131,14 @@ public class ProductPanel extends JPanel {
       String name = (String) tableModel.getValueAt(row, 1);
       String category = (String) tableModel.getValueAt(row, 2);
       int price = (int) tableModel.getValueAt(row, 3);
-      Product product = new Product(id, name, category, price);
+      ProductDTO product = new ProductDTO(id, name, category, price, false);
 
       ProductDeleteDialog dialog = new ProductDeleteDialog(
           (JFrame) SwingUtilities.getWindowAncestor(this), product);
       dialog.setVisible(true);
 
       if (dialog.isConfirmed()) {
-        productDAO.deleteProduct(product.id);
+        productDAO.deleteProduct(product.id());
         init();
       }
     } else {

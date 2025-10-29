@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import myProj.dao.StockDAO;
-import myProj.dto.Stock;
+import myProj.dto.StockDTO;
 import myProj.panels.dialogs.ProductStockDialog;
 
 public class StockPanel extends JPanel {
@@ -14,7 +14,7 @@ public class StockPanel extends JPanel {
   private final JTable table;
   private final DefaultTableModel tableModel;
   private final StockDAO stockDAO = new StockDAO();
-  private List<Stock> list;
+  private List<StockDTO> list;
 
   public StockPanel() {
     setLayout(new BorderLayout());
@@ -54,10 +54,10 @@ public class StockPanel extends JPanel {
   private void loadStock() {
     tableModel.setRowCount(0);
     this.list = stockDAO.getAllStocks();
-    for (Stock s : list) {
+    for (StockDTO s : list) {
       tableModel.addRow(new Object[]{
-          s.getProductName(),
-          s.quantity
+          s.productName(),
+          s.quantity()
       });
     }
   }
@@ -76,8 +76,8 @@ public class StockPanel extends JPanel {
       return;
     }
 
-    int productId = list.get(row).getProductId();
-    String productName = list.get(row).getProductName();
+    int productId = list.get(row).productId();
+    String productName = list.get(row).productName();
     String input = JOptionPane.showInputDialog(this, productName + " 재고 수량 추가:", "0");
     if (input != null) {
       try {
@@ -100,8 +100,8 @@ public class StockPanel extends JPanel {
       return;
     }
 
-    int productId = list.get(row).getProductId();
-    String productName = list.get(row).getProductName();
+    int productId = list.get(row).productId();
+    String productName = list.get(row).productName();
     String input = JOptionPane.showInputDialog(this, productName + " 재고 수량 감소:", "0");
     if (input != null) {
       try {

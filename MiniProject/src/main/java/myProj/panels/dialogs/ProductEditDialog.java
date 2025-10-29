@@ -3,16 +3,16 @@ package myProj.panels.dialogs;
 import javax.swing.*;
 import java.awt.*;
 
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 
 public class ProductEditDialog extends JDialog {
 
   private final JTextField nameField;
   private final JTextField categoryField;
   private final JTextField priceField;
-  private Product product;
+  private ProductDTO product;
 
-  public ProductEditDialog(JFrame parent, Product p) {
+  public ProductEditDialog(JFrame parent, ProductDTO p) {
     super(parent, "상품 수정", true);
     setSize(400, 250);
     setLocationRelativeTo(parent);
@@ -21,15 +21,15 @@ public class ProductEditDialog extends JDialog {
     this.product = p;
 
     add(new JLabel("상품명:"));
-    nameField = new JTextField(p.name);
+    nameField = new JTextField(p.name());
     add(nameField);
 
     add(new JLabel("카테고리:"));
-    categoryField = new JTextField(p.category);
+    categoryField = new JTextField(p.category());
     add(categoryField);
 
     add(new JLabel("가격:"));
-    priceField = new JTextField(Integer.toString(p.price));
+    priceField = new JTextField(Integer.toString(p.price()));
     add(priceField);
 
     JButton editButton = new JButton("수정");
@@ -48,7 +48,7 @@ public class ProductEditDialog extends JDialog {
           return;
         }
 
-        product = new Product(p.id, name, category, Integer.parseInt(price));
+        product = new ProductDTO(p.id(), name, category, Integer.parseInt(price), false);
         dispose();
       } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "가격은 숫자여야 합니다.");
@@ -61,7 +61,7 @@ public class ProductEditDialog extends JDialog {
     });
   }
 
-  public Product getProduct() {
+  public ProductDTO getProduct() {
     return product;
   }
 }

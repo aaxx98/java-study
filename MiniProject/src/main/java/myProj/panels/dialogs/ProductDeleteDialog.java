@@ -3,13 +3,13 @@ package myProj.panels.dialogs;
 import javax.swing.*;
 import java.awt.*;
 
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 
 public class ProductDeleteDialog extends JDialog {
 
   private boolean confirmed = false; // 삭제 여부 플래그
 
-  public ProductDeleteDialog(JFrame parent, Product product) {
+  public ProductDeleteDialog(JFrame parent, ProductDTO product) {
     super(parent, "상품 삭제", true);
     setSize(350, 200);
     setLayout(new BorderLayout(10, 10));
@@ -18,9 +18,9 @@ public class ProductDeleteDialog extends JDialog {
     // 상품 정보 표시
     JPanel infoPanel = new JPanel(new GridLayout(3, 1, 5, 5));
     infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    infoPanel.add(new JLabel("상품명: " + product.name));
-    infoPanel.add(new JLabel("카테고리: " + product.category));
-    infoPanel.add(new JLabel("가격: " + product.price + "원"));
+    infoPanel.add(new JLabel("상품명: " + product.name()));
+    infoPanel.add(new JLabel("카테고리: " + product.category()));
+    infoPanel.add(new JLabel("가격: " + product.price() + "원"));
 
     // 안내 문구
     JLabel confirmLabel = new JLabel("정말로 삭제하시겠습니까?");

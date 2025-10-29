@@ -1,16 +1,23 @@
 package myProj.panels;
 
-import java.util.List;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import myProj.dao.OrderDAO;
-import myProj.dto.OrderSummary;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import myProj.dto.OrderSummaryDTO;
 import myProj.panels.dialogs.OrderDetailDialog;
 import myProj.panels.dialogs.OrderNewDialog;
+import myProj.service.OrderService;
 
 public class OrderPanel extends JPanel {
 
@@ -18,10 +25,12 @@ public class OrderPanel extends JPanel {
   private final DefaultTableModel model;
   private final JLabel dateLabel;
   private LocalDate currentDate;
-  private final OrderDAO orderDAO = new OrderDAO();
-  private List<OrderSummary> list;
+  private final OrderService orderService;
+  private List<OrderSummaryDTO> list;
 
-  public OrderPanel() {
+  public OrderPanel(OrderService orderService) {
+    this.orderService = orderService;
+
     setLayout(new BorderLayout());
     currentDate = LocalDate.now();
 
@@ -73,20 +82,20 @@ public class OrderPanel extends JPanel {
 
   private void loadOrders() {
     model.setRowCount(0);
-    this.list = orderDAO.getOrdersByDate(currentDate);
-    for (OrderSummary summary : this.list) {
+    this.list = orderService.getOrdersByDate(currentDate);
+    for (OrderSummaryDTO summary : this.list) {
       model.addRow(new Object[]{
-          summary.id,
+          summary.id(),
           summary.getStatusString(),
-          summary.itemCount,
-          summary.totalPrice
+          summary.itemCount(),
+          summary.totalPrice()
       });
     }
   }
 
   private void openNewOrderDialog() {
     JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-    OrderNewDialog dialog = new OrderNewDialog(parentFrame);
+    OrderNewDialog dialog = new OrderNewDialog(orderService, parentFrame);
     dialog.setVisible(true);
     loadOrders();
   }
@@ -98,7 +107,7 @@ public class OrderPanel extends JPanel {
       return;
     }
 
-    OrderDetailDialog dialog = new OrderDetailDialog(
+    OrderDetailDialog dialog = new OrderDetailDialog(orderService,
         (JFrame) SwingUtilities.getWindowAncestor(this), this.list.get(row));
     dialog.setVisible(true);
     loadOrders();

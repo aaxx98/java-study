@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import myProj.db.DBConnection;
-import myProj.dto.Stock;
 import myProj.db.DBUtil;
+import myProj.dto.StockDTO;
 
 public class StockDAO {
 
-  public List<Stock> getAllStocks() {
-    List<Stock> stocks = new ArrayList<>();
+  public List<StockDTO> getAllStocks() {
+    List<StockDTO> stocks = new ArrayList<>();
     String sql = "SELECT *, Products.id as product_id, Products.name as product_name FROM Stocks "
         + "JOIN Products ON Products.id = Stocks.product_id "
         + "WHERE Products.stock_manage = true";
@@ -21,7 +21,7 @@ public class StockDAO {
         ResultSet rs = ps.executeQuery()) {
 
       while (rs.next()) {
-        Stock s = new Stock(
+        StockDTO s = new StockDTO(
             rs.getInt("id"),
             rs.getInt("quantity"),
             rs.getInt("product_id"),

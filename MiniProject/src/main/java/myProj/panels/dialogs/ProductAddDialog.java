@@ -3,14 +3,14 @@ package myProj.panels.dialogs;
 import javax.swing.*;
 import java.awt.*;
 
-import myProj.dto.Product;
+import myProj.dto.ProductDTO;
 
 public class ProductAddDialog extends JDialog {
 
   private final JTextField nameField;
   private final JTextField categoryField;
   private final JTextField priceField;
-  private Product product;
+  private ProductDTO product;
 
   public ProductAddDialog(JFrame parent) {
     super(parent, "상품 추가", true);
@@ -46,7 +46,7 @@ public class ProductAddDialog extends JDialog {
           return;
         }
 
-        product = new Product(0, name, category, Integer.parseInt(price));
+        product = new ProductDTO(0, name, category, Integer.parseInt(price), false);
         dispose();
       } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "가격은 숫자여야 합니다.");
@@ -59,7 +59,7 @@ public class ProductAddDialog extends JDialog {
     });
   }
 
-  public Product getProduct() {
+  public ProductDTO getProduct() {
     return product;
   }
 }
