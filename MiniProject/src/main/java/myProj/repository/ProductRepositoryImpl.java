@@ -23,4 +23,30 @@ public class ProductRepositoryImpl implements ProductRepository {
     return em.createQuery("SELECT p FROM Products p", Products.class)
         .getResultList();
   }
+
+  @Override
+  public List<Products> findProductBySearchCondition(String name, String category) {
+    String jpql = "SELECT p FROM Products p WHERE p.name LIKE :name AND p.category LIKE :category";
+    return em.createQuery(jpql, Products.class)
+        .setParameter("name", "%" + name + "%")
+        .setParameter("category", "%" + category + "%")
+        .getResultList();
+  }
+
+  @Override
+  public void save(Products product) {
+    if (product.getId() == 0) {
+      em.persist(product);
+    } else {
+      em.merge(product);
+    }
+  }
+
+  @Override
+  public void delete(int id) {
+    Products product = em.find(Products.class, id);
+    if (product != null) {
+      em.remove(product);
+    }
+  }
 }

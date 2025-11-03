@@ -11,6 +11,10 @@ import myProj.repository.StockRepository;
 import myProj.repository.StockRepositoryImpl;
 import myProj.service.OrderService;
 import myProj.service.OrderServiceImpl;
+import myProj.service.ProductService;
+import myProj.service.ProductServiceImpl;
+import myProj.service.StockService;
+import myProj.service.StockServiceImpl;
 
 public class JPAConfig {
 
@@ -20,10 +24,6 @@ public class JPAConfig {
   public static void init() {
     emf = Persistence.createEntityManagerFactory("cafeDB");
     em = emf.createEntityManager();
-  }
-
-  public static EntityManager getEntityManager() {
-    return em;
   }
 
   // Repository 생성
@@ -43,6 +43,21 @@ public class JPAConfig {
   public static OrderService orderService() {
     return new OrderServiceImpl(
         orderRepository(),
+        productRepository(),
+        stockRepository(),
+        em
+    );
+  }
+
+  public static ProductService productService() {
+    return new ProductServiceImpl(
+        productRepository(),
+        em
+    );
+  }
+
+  public static StockService stockService() {
+    return new StockServiceImpl(
         productRepository(),
         stockRepository(),
         em

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-
 import myProj.dto.*;
 import myProj.service.OrderService;
 
@@ -14,9 +13,8 @@ public class OrderDetailDialog extends JDialog {
   private final int orderId;
   private final OrderService orderService;
 
-  private JComboBox<String> statusCombo;
-  private JTable itemTable;
-  private DefaultTableModel tableModel;
+  private final JComboBox<String> statusCombo;
+  private final DefaultTableModel tableModel;
 
   public OrderDetailDialog(
       OrderService orderService,
@@ -50,7 +48,7 @@ public class OrderDetailDialog extends JDialog {
         return false;
       }
     };
-    itemTable = new JTable(tableModel);
+    JTable itemTable = new JTable(tableModel);
     JScrollPane scrollPane = new JScrollPane(itemTable);
     add(scrollPane, BorderLayout.CENTER);
 

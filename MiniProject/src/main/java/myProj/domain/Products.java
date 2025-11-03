@@ -52,6 +52,10 @@ public class Products {
     this.price = price;
   }
 
+  public void setStockManage(boolean stockManage) {
+    this.stockManage = stockManage;
+  }
+
   public boolean isStockManage() {
     return stockManage;
   }

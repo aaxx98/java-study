@@ -2,7 +2,6 @@ package myProj.panels.dialogs;
 
 import javax.swing.*;
 import java.awt.*;
-
 import myProj.dto.ProductDTO;
 
 public class ProductAddDialog extends JDialog {

@@ -1,26 +1,36 @@
 package myProj.panels;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
-
-import myProj.dao.ProductDAO;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import myProj.dto.ProductDTO;
 import myProj.panels.dialogs.ProductAddDialog;
 import myProj.panels.dialogs.ProductDeleteDialog;
 import myProj.panels.dialogs.ProductEditDialog;
+import myProj.service.ProductService;
 
 public class ProductPanel extends JPanel {
 
   private final JTable table;
   private final DefaultTableModel tableModel;
-  private final ProductDAO productDAO = new ProductDAO();
-  private JTextField nameField;
-  private JTextField categoryField;
+  private final ProductService productService;
+  private final JTextField nameField;
+  private final JTextField categoryField;
 
 
-  public ProductPanel() {
+  public ProductPanel(ProductService productService) {
+    this.productService = productService;
+
     setLayout(new BorderLayout());
 
     String[] columns = {"ID", "상품명", "카테고리", "가격"};
@@ -77,7 +87,7 @@ public class ProductPanel extends JPanel {
 
   private void loadProducts(String name, String category) {
     tableModel.setRowCount(0);
-    List<ProductDTO> products = productDAO.getAllProducts(name, category);
+    List<ProductDTO> products = productService.searchProducts(name, category);
     for (ProductDTO p : products) {
       tableModel.addRow(new Object[]{
           p.id(),
@@ -95,7 +105,7 @@ public class ProductPanel extends JPanel {
 
     ProductDTO p = dialog.getProduct();
     if (p != null) {
-      productDAO.addProduct(p);
+      productService.createProduct(p);
       init();
     }
   }
@@ -118,7 +128,7 @@ public class ProductPanel extends JPanel {
 
     ProductDTO p = dialog.getProduct();
     if (p != null) {
-      productDAO.editProduct(p);
+      productService.updateProduct(p);
       init();
     }
 
@@ -138,7 +148,7 @@ public class ProductPanel extends JPanel {
       dialog.setVisible(true);
 
       if (dialog.isConfirmed()) {
-        productDAO.deleteProduct(product.id());
+        productService.deleteProduct(product.id());
         init();
       }
     } else {

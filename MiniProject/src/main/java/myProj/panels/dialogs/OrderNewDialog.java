@@ -17,9 +17,9 @@ import myProj.service.OrderService;
 
 public class OrderNewDialog extends JDialog {
 
-  private JTable itemTable;
-  private DefaultTableModel tableModel;
-  private JLabel totalLabel;
+  private final JTable itemTable;
+  private final DefaultTableModel tableModel;
+  private final JLabel totalLabel;
   private final OrderService orderService;
 
   public OrderNewDialog(

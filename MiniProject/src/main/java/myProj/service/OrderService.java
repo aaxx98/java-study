@@ -16,6 +16,5 @@ public interface OrderService {
 
   List<OrderItemDetailDTO> getOrderItems(Integer orderId);
 
-
   void updateOrderStatus(Integer orderId, String status);
 }

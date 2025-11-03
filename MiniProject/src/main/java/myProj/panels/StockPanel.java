@@ -1,22 +1,30 @@
 package myProj.panels;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-
-import myProj.dao.StockDAO;
 import myProj.dto.StockDTO;
 import myProj.panels.dialogs.ProductStockDialog;
+import myProj.service.StockService;
 
 public class StockPanel extends JPanel {
 
   private final JTable table;
   private final DefaultTableModel tableModel;
-  private final StockDAO stockDAO = new StockDAO();
+  private final StockService stockService;
   private List<StockDTO> list;
 
-  public StockPanel() {
+  public StockPanel(StockService stockService) {
+    this.stockService = stockService;
+
     setLayout(new BorderLayout());
 
     String[] columns = {"상품명", "현재 재고"};
@@ -53,7 +61,7 @@ public class StockPanel extends JPanel {
 
   private void loadStock() {
     tableModel.setRowCount(0);
-    this.list = stockDAO.getAllStocks();
+    this.list = stockService.getAllStocks();
     for (StockDTO s : list) {
       tableModel.addRow(new Object[]{
           s.productName(),
@@ -64,7 +72,7 @@ public class StockPanel extends JPanel {
 
   private void editProductStock() {
     JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-    ProductStockDialog dialog = new ProductStockDialog(parentFrame);
+    ProductStockDialog dialog = new ProductStockDialog(parentFrame, stockService);
     dialog.setVisible(true);
     loadStock();
   }
@@ -85,7 +93,7 @@ public class StockPanel extends JPanel {
         if (amount <= 0) {
           throw new NumberFormatException();
         }
-        stockDAO.addStock(productId, amount);
+        stockService.addStock(productId, amount);
         loadStock();
       } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "올바른 숫자를 입력하세요.");
@@ -109,7 +117,7 @@ public class StockPanel extends JPanel {
         if (amount <= 0) {
           throw new NumberFormatException();
         }
-        stockDAO.subtractStock(productId, amount);
+        stockService.addStock(productId, amount * (-1));
         loadStock();
       } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "올바른 숫자를 입력하세요.");

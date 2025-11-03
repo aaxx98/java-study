@@ -1,22 +1,31 @@
 
 package myProj.panels.dialogs;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.List;
-
-import myProj.dao.ProductDAO;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import myProj.dto.ProductDTO;
+import myProj.service.StockService;
 
 public class ProductStockDialog extends JDialog {
 
-  private JTable table;
-  private DefaultTableModel tableModel;
-  private ProductDAO productDAO = new ProductDAO();
+  private final DefaultTableModel tableModel;
+  private final StockService stockService;
 
-  public ProductStockDialog(JFrame parent) {
+  public ProductStockDialog(JFrame parent, StockService stockService) {
     super(parent, "재고 관리 여부 변경", true);
+    this.stockService = stockService;
+
     setSize(500, 400);
     setLocationRelativeTo(parent);
     setLayout(new BorderLayout(10, 10));
@@ -30,7 +39,7 @@ public class ProductStockDialog extends JDialog {
       }
     };
 
-    table = new JTable(tableModel);
+    JTable table = new JTable(tableModel);
     table.getColumnModel().getColumn(2)
         .setCellEditor(new DefaultCellEditor(new JComboBox<>(new String[]{"예", "아니오"})));
 
@@ -53,7 +62,7 @@ public class ProductStockDialog extends JDialog {
 
   private void loadProducts() {
     tableModel.setRowCount(0);
-    List<ProductDTO> products = productDAO.getAllProducts("", "");
+    List<ProductDTO> products = stockService.searchProducts("", "");
     for (ProductDTO p : products) {
       tableModel.addRow(new Object[]{
           p.id(),
@@ -69,12 +78,11 @@ public class ProductStockDialog extends JDialog {
         int id = (int) tableModel.getValueAt(i, 0);
         String value = (String) tableModel.getValueAt(i, 2);
         boolean stockManage = "예".equals(value);
-        productDAO.updateStockManage(id, stockManage);
+        stockService.updateStockManage(id, stockManage);
       }
       JOptionPane.showMessageDialog(this, "재고 관리 여부가 저장되었습니다.");
       dispose();
     } catch (Exception e) {
-      e.printStackTrace();
       JOptionPane.showMessageDialog(this, "저장 중 오류: " + e.getMessage());
     }
   }

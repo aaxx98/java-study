@@ -44,7 +44,6 @@ public class OrderRepositoryImpl implements OrderRepository {
     Orders order = em.find(Orders.class, orderId);
     if (order != null) {
       order.setStatus(status);
-      // 변경 감지(Dirty Checking)로 자동 UPDATE
     }
   }
 }

@@ -10,4 +10,9 @@ public interface ProductRepository {
 
   List<Products> findAll();
 
+  List<Products> findProductBySearchCondition(String name, String category);
+
+  void save(Products product);
+  
+  void delete(int id);
 }

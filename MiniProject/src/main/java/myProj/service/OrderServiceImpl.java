@@ -23,7 +23,8 @@ public class OrderServiceImpl implements OrderService {
   private final StockRepository stockRepository;
   private final EntityManager em;
 
-  public OrderServiceImpl(OrderRepository orderRepository,
+  public OrderServiceImpl(
+      OrderRepository orderRepository,
       ProductRepository productRepository,
       StockRepository stockRepository,
       EntityManager em) {
@@ -74,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public List<OrderItemDetailDTO> getOrderItems(Integer orderId) {
     Orders order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다. ID: " + orderId));
 
     return order.getOrderItems().stream()
         .map(item -> new OrderItemDetailDTO(
@@ -115,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
           Stocks stock = stockRepository.findByProductId(product.getId())
               .orElseThrow(() -> new IllegalStateException("재고 정보가 없습니다."));
 
-          stock.decrease(dto.quantity()); // 도메인 메서드 활용
+          stock.decrease(dto.quantity());
         }
       }
 
