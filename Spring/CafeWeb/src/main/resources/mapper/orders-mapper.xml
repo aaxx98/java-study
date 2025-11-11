@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.order.dao.OrderDao">
+
+  <select id="findAllOrders" resultType="com.mycom.myapp.order.dto.OrderDto">
+    select id, order_date, status
+    from Orders
+  </select>
+
+  <select id="findOrderById" parameterType="int" resultType="com.mycom.myapp.order.dto.OrderDto">
+    select id, order_date, status
+    from Orders
+    where id = #{orderId}
+  </select>
+
+</mapper>
+

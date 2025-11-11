@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.myapp.orderItem.dao.OrderItemDao">
+
+  <resultMap id="OrderItemResultMap" type="com.mycom.myapp.orderItem.dto.OrderItemDto">
+    <id property="id" column="id"/>
+    <result property="orderId" column="order_id"/>
+    <result property="quantity" column="quantity"/>
+    <result property="price" column="price"/>
+
+    <association property="product" javaType="com.mycom.myapp.product.dto.ProductDto">
+      <id property="id" column="product_id"/>
+      <result property="name" column="product_name"/>
+      <result property="category" column="product_category"/>
+      <result property="price" column="product_price"/>
+    </association>
+  </resultMap>
+
+  <select id="findOrderItemsByOrderId" parameterType="int" resultMap="OrderItemResultMap">
+    SELECT
+    oi.id,
+    oi.order_id,
+    oi.quantity,
+    oi.price,
+    p.id AS product_id,
+    p.name AS product_name,
+    p.category AS product_category,
+    p.price AS product_price
+    FROM order_items oi
+    JOIN products p ON oi.product_id = p.id
+    WHERE oi.order_id = #{orderId}
+  </select>
+  
+</mapper>
