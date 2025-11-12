@@ -4,7 +4,21 @@
 <mapper namespace="com.mycom.myapp.order.dao.OrderDao">
 
   <select id="findAllOrders" resultType="com.mycom.myapp.order.dto.OrderDto">
-    select id, order_date, status
+    SELECT
+    o.id,
+    COALESCE(SUM(oi.quantity), 0) AS totalQuantity,
+    COALESCE(SUM(oi.price * oi.quantity), 0) AS totalPrice,
+    o.status
+    FROM Orders o
+    LEFT JOIN OrderItems oi ON oi.order_id = o.id
+    GROUP BY o.id, o.status
+    ORDER BY o.id DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+  </select>
+
+
+  <select id="countAll" resultType="int">
+    select count(*)
     from Orders
   </select>
 

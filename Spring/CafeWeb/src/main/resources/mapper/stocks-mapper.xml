@@ -3,7 +3,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.myapp.stock.dao.StockDao">
   <select id="findAllStocks" resultType="com.mycom.myapp.stock.dto.StockDto">
-    select id, product_id, quantity
-    from Stocks
+    select s.id, s.product_id, p.name as product_name, s.quantity
+    from Stocks as s
+    LEFT JOIN Products p ON p.id = s.product_id
+    ORDER BY s.id DESC
+    LIMIT #{pageSize} OFFSET #{offset}
+  </select>
+
+  <select id="countAll" resultType="int">
+    select count(*)
+    from Stocks as s
+    LEFT JOIN Products p ON p.id = s.product_id
   </select>
 </mapper>

@@ -1,6 +1,5 @@
 package com.mycom.myapp.order.dto;
 
-import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +8,7 @@ import lombok.Setter;
 public class OrderDto {
 
   private int id;
-  private LocalDate orderDate;
+  private int totalQuantity;
+  private int totalPrice;
   private String status;
 }

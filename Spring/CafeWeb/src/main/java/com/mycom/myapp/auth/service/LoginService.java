@@ -1,8 +1,10 @@
 package com.mycom.myapp.auth.service;
 
 import com.mycom.myapp.auth.dao.LoginDao;
-import com.mycom.myapp.auth.dto.LoginRequest;
+import com.mycom.myapp.auth.dto.LoginRequestDto;
 import com.mycom.myapp.user.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,18 @@ public class LoginService {
     this.loginDao = loginDao;
   }
 
-  public Optional<UserDto> login(LoginRequest loginInfo) {
+  public Optional<UserDto> getUserBySessionId(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if (session != null) {
+      Object obj = session.getAttribute("userDto");
+      if (obj != null && obj instanceof UserDto userDto) {
+        return Optional.of(userDto);
+      }
+    }
+    return Optional.empty();
+  }
+
+  public Optional<UserDto> login(LoginRequestDto loginInfo) {
 
     UserDto userInfo = loginDao.findUserByEmail(loginInfo.getEmail());
 
