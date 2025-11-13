@@ -27,9 +27,14 @@
     p.name AS product_name,
     p.category AS product_category,
     p.price AS product_price
-    FROM order_items oi
+    FROM OrderItems oi
     JOIN products p ON oi.product_id = p.id
     WHERE oi.order_id = #{orderId}
   </select>
-  
+
+  <select id="deleteByOrderId" parameterType="int">
+    DELETE FROM OrderItems
+    WHERE order_id = #{orderId}
+  </select>
+
 </mapper>

@@ -16,16 +16,26 @@
     LIMIT #{pageSize} OFFSET #{offset}
   </select>
 
-
   <select id="countAll" resultType="int">
     select count(*)
     from Orders
   </select>
 
   <select id="findOrderById" parameterType="int" resultType="com.mycom.myapp.order.dto.OrderDto">
-    select id, order_date, status
-    from Orders
-    where id = #{orderId}
+    SELECT
+    o.id,
+    COALESCE(SUM(oi.quantity), 0) AS totalQuantity,
+    COALESCE(SUM(oi.price * oi.quantity), 0) AS totalPrice,
+    o.status
+    FROM Orders o
+    LEFT JOIN OrderItems oi ON oi.order_id = o.id
+    WHERE o.id = #{orderId}
+    GROUP BY o.id, o.status
+  </select>
+
+  <select id="deleteById" parameterType="int">
+    DELETE FROM Orders
+    WHERE id = #{id}
   </select>
 
 </mapper>

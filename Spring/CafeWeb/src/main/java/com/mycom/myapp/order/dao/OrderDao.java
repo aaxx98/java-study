@@ -14,4 +14,6 @@ public interface OrderDao {
   int countAll();
 
   OrderDto findOrderById(@Param("orderId") int orderId);
+
+  void deleteById(@Param("id") int id);
 }

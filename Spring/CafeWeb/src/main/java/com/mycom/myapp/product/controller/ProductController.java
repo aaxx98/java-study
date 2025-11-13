@@ -5,8 +5,10 @@ import com.mycom.myapp.product.dto.ProductListDto;
 import com.mycom.myapp.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,5 +33,14 @@ public class ProductController {
     ProductListDto listDto = productService.getProductList(requestDto);
 
     return ResponseEntity.ok(listDto);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+    boolean deleted = productService.deleteById(id);
+    if (!deleted) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok().build();
   }
 }

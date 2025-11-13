@@ -29,4 +29,13 @@ public class ProductService {
     return response;
 
   }
+
+  public boolean deleteById(int id) {
+    ProductDto product = productDao.findById(id);
+    if (product != null) {
+      productDao.deleteById(id);
+      return true;
+    }
+    return false;
+  }
 }

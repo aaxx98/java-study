@@ -6,6 +6,7 @@ import com.mycom.myapp.order.dto.OrderListDto;
 import com.mycom.myapp.order.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,5 +39,14 @@ public class OrderController {
   @GetMapping("/{orderId}")
   public OrderDto getOrderById(@PathVariable int orderId) {
     return orderService.getOrderById(orderId);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteOrder(@PathVariable int id) {
+    boolean deleted = orderService.deleteById(id);
+    if (!deleted) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok().build();
   }
 }

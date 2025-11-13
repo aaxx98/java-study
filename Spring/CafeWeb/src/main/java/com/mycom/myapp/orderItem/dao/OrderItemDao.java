@@ -7,5 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface OrderItemDao {
+
   List<OrderItemDto> findOrderItemsByOrderId(@Param("orderId") int orderId);
+
+  void deleteByOrderId(@Param("orderId") int orderId);
 }
