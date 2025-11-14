@@ -13,7 +13,7 @@ public interface ProductDao {
 
   List<ProductDto> findAllProducts(PageRequestDto req);
 
-  int countAll();
+  int countAll(PageRequestDto req);
 
   void deleteById(@Param("id") int id);
 }

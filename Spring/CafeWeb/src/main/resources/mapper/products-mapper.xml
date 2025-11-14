@@ -23,6 +23,10 @@
   <select id="countAll" resultType="int">
     select count(*)
     from Products
+    <if test="keyword != null and keyword != ''">
+      WHERE (name LIKE CONCAT('%', #{keyword}, '%')
+      OR category LIKE CONCAT('%', #{keyword}, '%'))
+    </if>
   </select>
 
   <select id="deleteById" parameterType="int">

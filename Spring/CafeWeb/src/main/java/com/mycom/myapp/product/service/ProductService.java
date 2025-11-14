@@ -18,7 +18,7 @@ public class ProductService {
 
   public ProductListDto getProductList(PageRequestDto request) {
     List<ProductDto> list = productDao.findAllProducts(request);
-    int totalCount = productDao.countAll();
+    int totalCount = productDao.countAll(request);
     int totalPages = (int) Math.ceil((double) totalCount / request.getPageSize());
 
     ProductListDto response = new ProductListDto();
