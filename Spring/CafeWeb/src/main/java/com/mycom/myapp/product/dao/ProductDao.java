@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProductDao {
 
-  ProductDto findById(int id);
+  ProductDto findById(@Param("id") int id);
 
   List<ProductDto> findAllProducts(PageRequestDto req);
 

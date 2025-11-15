@@ -27,7 +27,6 @@ public class ProductService {
     response.setTotalPages(totalPages);
     response.setCurrentPage(request.getPage());
     return response;
-
   }
 
   public boolean deleteById(int id) {
