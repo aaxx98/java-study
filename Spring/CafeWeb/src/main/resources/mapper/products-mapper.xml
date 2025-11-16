@@ -34,4 +34,11 @@
     WHERE id = #{id}
   </select>
 
+  <insert id="registerProduct" parameterType="com.mycom.myapp.product.dto.ProductDto"
+    useGeneratedKeys="true"
+    keyProperty="id">
+    INSERT INTO Products (name, category, price, stock_manage)
+    VALUES (#{name}, #{category}, #{price}, #{stockManage})
+  </insert>
+
 </mapper>

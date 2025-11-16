@@ -16,4 +16,6 @@ public interface ProductDao {
   int countAll(PageRequestDto req);
 
   void deleteById(@Param("id") int id);
+
+  void registerProduct(ProductDto product);
 }

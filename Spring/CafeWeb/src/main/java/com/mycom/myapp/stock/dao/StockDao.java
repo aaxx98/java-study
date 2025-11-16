@@ -11,4 +11,6 @@ public interface StockDao {
   List<StockDto> findAllStocks(PageRequestDto req);
 
   int countAll();
+
+  void updateStock(StockDto stock);
 }

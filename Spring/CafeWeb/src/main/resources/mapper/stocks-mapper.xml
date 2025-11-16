@@ -15,4 +15,11 @@
     from Stocks as s
     LEFT JOIN Products p ON p.id = s.product_id
   </select>
+
+  <update id="updateStock" parameterType="com.mycom.myapp.stock.dto.StockDto">
+    UPDATE Stocks
+    SET quantity = #{quantity}
+    WHERE product_id = #{product_id}
+  </update>
+
 </mapper>

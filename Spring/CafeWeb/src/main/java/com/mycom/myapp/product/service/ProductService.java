@@ -37,4 +37,8 @@ public class ProductService {
     }
     return false;
   }
+
+  public void createProduct(ProductDto product) {
+    productDao.registerProduct(product);
+  }
 }

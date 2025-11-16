@@ -11,4 +11,6 @@ public interface OrderItemDao {
   List<OrderItemDto> findOrderItemsByOrderId(@Param("orderId") int orderId);
 
   void deleteByOrderId(@Param("orderId") int orderId);
+
+  void registerOrderItem(OrderItemDto orderItem);
 }

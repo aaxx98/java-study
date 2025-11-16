@@ -37,4 +37,10 @@
     WHERE order_id = #{orderId}
   </select>
 
+  <insert id="registerOrderItem" parameterType="com.mycom.myapp.orderItem.dto.OrderItemDto"
+    useGeneratedKeys="true"
+    keyProperty="id">
+    INSERT INTO OrderItems (order_id, product_id, quantity, price)
+    VALUES (#{orderId}, #{productId}, #{quantity}, #{price})
+  </insert>
 </mapper>

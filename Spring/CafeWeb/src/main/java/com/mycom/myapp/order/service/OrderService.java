@@ -5,6 +5,10 @@ import com.mycom.myapp.order.dao.OrderDao;
 import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.order.dto.OrderListDto;
 import com.mycom.myapp.orderItem.dao.OrderItemDao;
+import com.mycom.myapp.orderItem.dto.OrderItemDto;
+import com.mycom.myapp.product.dao.ProductDao;
+import com.mycom.myapp.product.dto.ProductDto;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +18,12 @@ public class OrderService {
 
   private final OrderDao orderDao;
   private final OrderItemDao orderItemDao;
+  private final ProductDao productDao;
 
-  public OrderService(OrderDao orderDao, OrderItemDao orderItemDao) {
+  public OrderService(OrderDao orderDao, OrderItemDao orderItemDao, ProductDao productDao) {
     this.orderDao = orderDao;
     this.orderItemDao = orderItemDao;
+    this.productDao = productDao;
   }
 
   public OrderListDto getOrderList(PageRequestDto request) {
@@ -46,5 +52,25 @@ public class OrderService {
       return true;
     }
     return false;
+  }
+
+  @Transactional
+  public boolean createOrder(OrderDto order) {
+    OrderDto saveOrder = new OrderDto();
+    saveOrder.setStatus("ORDER");
+    saveOrder.setOrderDate(LocalDate.now());
+    orderDao.registerOrder(saveOrder);
+    int orderId = saveOrder.getId();
+
+    for (OrderItemDto item : order.getOrderItems()) {
+      ProductDto product = productDao.findById(item.getProductId());
+      if (product == null) {
+        return false;
+      }
+      item.setOrderId(orderId);
+      item.setPrice(product.getPrice() * item.getQuantity());
+      orderItemDao.registerOrderItem(item);
+    }
+    return true;
   }
 }

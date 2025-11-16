@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -48,5 +50,14 @@ public class OrderController {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping
+  public ResponseEntity<?> saveOrder(@RequestBody OrderDto order) {
+    boolean result = orderService.createOrder(order);
+    if (result) {
+      return ResponseEntity.ok().build();
+    }
+    throw new IllegalArgumentException("주문 정보가 정확하지 않습니다.");
   }
 }

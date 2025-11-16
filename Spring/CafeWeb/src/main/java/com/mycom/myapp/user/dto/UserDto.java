@@ -11,4 +11,6 @@ public class UserDto {
   private String name;
   private String email;
   private String password;
+//  private LocalDate createdAt;
+//  private LocalDate updatedAt;
 }

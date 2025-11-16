@@ -14,7 +14,6 @@ public class OrderItemService {
   private final OrderItemDao orderItemDao;
   private final OrderDao orderDao;
 
-
   public OrderItemService(OrderItemDao orderItemDao, OrderDao orderDao) {
     this.orderItemDao = orderItemDao;
     this.orderDao = orderDao;

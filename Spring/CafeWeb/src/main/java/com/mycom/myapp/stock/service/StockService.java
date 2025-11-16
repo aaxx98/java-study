@@ -27,6 +27,5 @@ public class StockService {
     response.setTotalPages(totalPages);
     response.setCurrentPage(request.getPage());
     return response;
-
   }
 }
