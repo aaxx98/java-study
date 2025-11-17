@@ -47,5 +47,11 @@
     VALUES (#{orderDate}, #{status})
   </insert>
 
+  <update id="updateOrderStatus" parameterType="com.mycom.myapp.order.dto.OrderDto">
+    UPDATE Orders
+    SET status = #{status}
+    WHERE id = #{id}
+  </update>
+
 </mapper>
 

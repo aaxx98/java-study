@@ -73,4 +73,11 @@ public class OrderService {
     }
     return true;
   }
+
+  public boolean updateOrderStatus(int id, String status) {
+    OrderDto dto = new OrderDto();
+    dto.setId(id);
+    dto.setStatus(status);
+    return orderDao.updateOrderStatus(dto) > 0;
+  }
 }

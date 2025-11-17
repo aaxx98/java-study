@@ -18,4 +18,6 @@ public interface OrderDao {
   void deleteById(@Param("id") int id);
 
   void registerOrder(OrderDto order);
+
+  int updateOrderStatus(OrderDto dto);
 }

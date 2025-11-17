@@ -16,10 +16,21 @@
     LEFT JOIN Products p ON p.id = s.product_id
   </select>
 
-  <update id="updateStock" parameterType="com.mycom.myapp.stock.dto.StockDto">
+  <select id="findByProductId" parameterType="int" resultType="com.mycom.myapp.stock.dto.StockDto">
+    select id, product_id, quantity
+    from Stocks
+    where product_id = #{productId}
+  </select>
+
+  <update id="updateStockQuantity" parameterType="com.mycom.myapp.stock.dto.StockUpdateDto">
     UPDATE Stocks
-    SET quantity = #{quantity}
-    WHERE product_id = #{product_id}
+    SET quantity = quantity + #{add}
+    WHERE product_id = #{productId}
   </update>
+
+  <insert id="initStock" parameterType="com.mycom.myapp.stock.dto.StockDto">
+    INSERT INTO Stocks (product_id, quantity)
+    VALUES (#{productId}, 0)
+  </insert>
 
 </mapper>

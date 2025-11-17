@@ -4,11 +4,13 @@ import com.mycom.myapp.common.dto.PageRequestDto;
 import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.order.dto.OrderListDto;
 import com.mycom.myapp.order.service.OrderService;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,5 +61,15 @@ public class OrderController {
       return ResponseEntity.ok().build();
     }
     throw new IllegalArgumentException("주문 정보가 정확하지 않습니다.");
+  }
+
+  @PatchMapping("/{id}/status")
+  public ResponseEntity<Void> updateOrderStatus(
+      @PathVariable int id,
+      @RequestBody Map<String, String> request
+  ) {
+    String status = request.get("status");
+    orderService.updateOrderStatus(id, status);
+    return ResponseEntity.ok().build();
   }
 }

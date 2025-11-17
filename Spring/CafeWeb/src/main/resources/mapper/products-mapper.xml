@@ -41,4 +41,13 @@
     VALUES (#{name}, #{category}, #{price}, #{stockManage})
   </insert>
 
+  <update id="updateProduct" parameterType="com.mycom.myapp.product.dto.ProductDto">
+    UPDATE Products
+    SET name = #{name},
+    category = #{category},
+    price = #{price},
+    stock_manage = #{stockManage}
+    WHERE id = #{id}
+  </update>
+
 </mapper>

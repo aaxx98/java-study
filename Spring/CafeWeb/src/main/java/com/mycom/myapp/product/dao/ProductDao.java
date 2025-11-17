@@ -18,4 +18,6 @@ public interface ProductDao {
   void deleteById(@Param("id") int id);
 
   void registerProduct(ProductDto product);
+
+  int updateProduct(ProductDto product);
 }

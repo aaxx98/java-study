@@ -1,5 +1,6 @@
 package com.mycom.myapp.orderItem.dao;
 
+import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.orderItem.dto.OrderItemDto;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,4 +14,6 @@ public interface OrderItemDao {
   void deleteByOrderId(@Param("orderId") int orderId);
 
   void registerOrderItem(OrderItemDto orderItem);
+
+  int updateOrderStatus(OrderDto orderDto);
 }
