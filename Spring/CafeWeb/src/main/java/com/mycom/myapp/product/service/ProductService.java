@@ -42,8 +42,7 @@ public class ProductService {
       if (existStock != null) {
         throw new IllegalStateException("해당 상품은 재고가 있어서 삭제할 수 없습니다.");
       }
-      productDao.deleteById(id);
-      return true;
+      return productDao.deleteById(id) > 0;
     }
     return false;
   }
@@ -65,19 +64,20 @@ public class ProductService {
   }
 
   @Transactional
-  public boolean createProduct(ProductDto product) {
-    productDao.registerProduct(product);
+  public int createProduct(ProductDto product) {
+    int inserted = productDao.registerProduct(product);
+    if (inserted <= 0) {
+      throw new IllegalStateException("상품 생성 실패");
+    }
 
     if (product.isStockManage()) {
       int productId = product.getId();
-      StockDto existStock = stockDao.findByProductId(productId);
-      if (existStock == null) {
-        StockDto stock = new StockDto();
-        stock.setProductId(productId);
-        stockDao.initStock(stock);
-      }
+
+      StockDto stock = new StockDto();
+      stock.setProductId(productId);
+      stockDao.initStock(stock);
     }
-    return true;
+    return product.getId();
   }
 
   public boolean updateStock(int id, StockUpdateDto stock) {

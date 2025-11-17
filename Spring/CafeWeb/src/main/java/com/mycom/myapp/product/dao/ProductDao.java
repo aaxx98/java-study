@@ -15,9 +15,9 @@ public interface ProductDao {
 
   int countAll(PageRequestDto req);
 
-  void deleteById(@Param("id") int id);
+  int deleteById(@Param("id") int id); // delete된 행 수 반환
 
-  void registerProduct(ProductDto product);
+  int registerProduct(ProductDto product); // insert된 행 수 반환
 
-  int updateProduct(ProductDto product);
+  int updateProduct(ProductDto product); // update된 행 수 반환
 }

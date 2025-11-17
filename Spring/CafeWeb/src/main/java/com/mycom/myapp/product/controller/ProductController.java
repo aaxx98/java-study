@@ -5,6 +5,7 @@ import com.mycom.myapp.product.dto.ProductDto;
 import com.mycom.myapp.product.dto.ProductListDto;
 import com.mycom.myapp.product.service.ProductService;
 import com.mycom.myapp.stock.dto.StockUpdateDto;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,9 +34,6 @@ public class ProductController {
   public ResponseEntity<?> getProductList(@ModelAttribute PageRequestDto requestDto) {
     if (requestDto.getPage() < 1 || requestDto.getPageSize() < 1) {
       throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
-//      return ResponseEntity
-//          .badRequest()
-//          .body("page와 pageSize는 1 이상의 값이어야 합니다.");
     }
     ProductListDto listDto = productService.getProductList(requestDto);
 
@@ -48,16 +46,14 @@ public class ProductController {
     if (!deleted) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping
   public ResponseEntity<Void> saveProduct(@RequestBody ProductDto product) {
-    boolean created = productService.createProduct(product);
-    if (!created) {
-      throw new IllegalArgumentException("상품 생성 중 에러 발생");
-    }
-    return ResponseEntity.ok().build();
+    int createdId = productService.createProduct(product);
+    URI location = URI.create("/api/products/" + createdId);
+    return ResponseEntity.created(location).build();
   }
 
   @PutMapping("/{id}")
@@ -66,7 +62,7 @@ public class ProductController {
     if (!updated) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 
   @PatchMapping("/{id}/stock")
@@ -76,6 +72,6 @@ public class ProductController {
     if (!updated) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok().build();
+    return ResponseEntity.noContent().build();
   }
 }
