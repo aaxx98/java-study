@@ -31,21 +31,14 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<?> getProductList(@ModelAttribute PageRequestDto requestDto) {
-    if (requestDto.getPage() < 1 || requestDto.getPageSize() < 1) {
-      throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
-    }
+  public ResponseEntity<ProductListDto> getProductList(@ModelAttribute PageRequestDto requestDto) {
     ProductListDto listDto = productService.getProductList(requestDto);
-
     return ResponseEntity.ok(listDto);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-    boolean deleted = productService.deleteById(id);
-    if (!deleted) {
-      return ResponseEntity.notFound().build();
-    }
+    productService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
@@ -57,21 +50,15 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestBody ProductDto product) {
-    boolean updated = productService.updateProduct(id, product);
-    if (!updated) {
-      return ResponseEntity.notFound().build();
-    }
+  public ResponseEntity<Void> updateProduct(@PathVariable int id, @RequestBody ProductDto product) {
+    productService.updateProduct(id, product);
     return ResponseEntity.noContent().build();
   }
 
   @PatchMapping("/{id}/stock")
-  public ResponseEntity<?> patchStockQuantity(
+  public ResponseEntity<Void> patchStockQuantity(
       @PathVariable int id, @RequestBody StockUpdateDto stock) {
-    boolean updated = productService.updateStock(id, stock);
-    if (!updated) {
-      return ResponseEntity.notFound().build();
-    }
+    productService.updateStock(id, stock);
     return ResponseEntity.noContent().build();
   }
 }

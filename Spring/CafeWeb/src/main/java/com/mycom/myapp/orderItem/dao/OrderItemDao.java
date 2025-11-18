@@ -13,7 +13,7 @@ public interface OrderItemDao {
 
   void deleteByOrderId(@Param("orderId") int orderId);
 
-  void registerOrderItem(OrderItemDto orderItem);
+  int registerOrderItem(OrderItemDto orderItem);
 
   int updateOrderStatus(OrderDto orderDto);
 }

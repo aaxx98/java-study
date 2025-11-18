@@ -17,6 +17,10 @@ public class StockService {
   }
 
   public StockListDto getStockList(PageRequestDto request) {
+    if (request.getPage() < 1 || request.getPageSize() < 1) {
+      throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
+    }
+
     List<StockDto> list = stockDao.findAllStocks(request);
     int totalCount = stockDao.countAll();
     int totalPages = (int) Math.ceil((double) totalCount / request.getPageSize());

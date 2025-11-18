@@ -16,7 +16,7 @@ public interface StockDao {
 
   StockDto findByProductId(@Param("productId") int productId);
 
-  void updateStockQuantity(StockUpdateDto stock);
+  int updateStockQuantity(StockUpdateDto stock);
 
   void initStock(StockDto stock);
 }

@@ -29,10 +29,10 @@
     </if>
   </select>
 
-  <select id="deleteById" parameterType="int">
+  <delete id="deleteById" parameterType="int">
     DELETE FROM Products
     WHERE id = #{id}
-  </select>
+  </delete>
 
   <insert id="registerProduct" parameterType="com.mycom.myapp.product.dto.ProductDto"
     useGeneratedKeys="true"

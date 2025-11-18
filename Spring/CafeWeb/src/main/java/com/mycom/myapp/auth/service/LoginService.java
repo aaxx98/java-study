@@ -2,10 +2,11 @@ package com.mycom.myapp.auth.service;
 
 import com.mycom.myapp.auth.dao.LoginDao;
 import com.mycom.myapp.auth.dto.LoginRequestDto;
+import com.mycom.myapp.common.exception.NotFoundException;
+import com.mycom.myapp.common.exception.UnauthorizedException;
 import com.mycom.myapp.user.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,25 +18,28 @@ public class LoginService {
     this.loginDao = loginDao;
   }
 
-  public Optional<UserDto> getUserBySessionId(HttpServletRequest request) {
+  public UserDto getUserBySessionId(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
-    if (session != null) {
-      Object obj = session.getAttribute("userDto");
-      if (obj != null && obj instanceof UserDto userDto) {
-        return Optional.of(userDto);
-      }
+    if (session == null) {
+      throw new UnauthorizedException("로그인 필요");
     }
-    return Optional.empty();
+
+    Object obj = session.getAttribute("userDto");
+    if (!(obj instanceof UserDto userDto)) {
+      throw new UnauthorizedException("로그인 필요");
+    }
+
+    return userDto;
   }
 
-  public Optional<UserDto> login(LoginRequestDto loginInfo) {
-
+  public UserDto login(LoginRequestDto loginInfo) {
     UserDto userInfo = loginDao.findUserByEmail(loginInfo.getEmail());
-
-    if (userInfo != null && loginInfo.getPassword().equals(userInfo.getPassword())) {
-      userInfo.setPassword(null); // 비밀번호 안정화
-      return Optional.of(userInfo);
+    if (userInfo == null) {
+      throw new NotFoundException("가입되지 않은 사용자입니다.");
     }
-    return Optional.empty();
+    if (!loginInfo.getPassword().equals(userInfo.getPassword())) {
+      throw new UnauthorizedException("로그인 정보가 일치하지 않습니다.");
+    }
+    return userInfo;
   }
 }

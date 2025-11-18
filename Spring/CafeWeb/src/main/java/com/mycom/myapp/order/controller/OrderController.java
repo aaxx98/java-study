@@ -4,6 +4,7 @@ import com.mycom.myapp.common.dto.PageRequestDto;
 import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.order.dto.OrderListDto;
 import com.mycom.myapp.order.service.OrderService;
+import java.net.URI;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,36 +30,28 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<?> getOrderList(@ModelAttribute PageRequestDto requestDto) {
-    if (requestDto.getPage() < 1 || requestDto.getPageSize() < 1) {
-      throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
-    }
+  public ResponseEntity<OrderListDto> getOrderList(@ModelAttribute PageRequestDto requestDto) {
     OrderListDto listDto = orderService.getOrderList(requestDto);
-
     return ResponseEntity.ok(listDto);
   }
 
   @GetMapping("/{orderId}")
-  public OrderDto getOrderById(@PathVariable int orderId) {
-    return orderService.getOrderById(orderId);
+  public ResponseEntity<OrderDto> getOrderById(@PathVariable int orderId) {
+    OrderDto order = orderService.getOrderById(orderId);
+    return ResponseEntity.ok(order);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteOrder(@PathVariable int id) {
-    boolean deleted = orderService.deleteById(id);
-    if (!deleted) {
-      return ResponseEntity.notFound().build();
-    }
-    return ResponseEntity.ok().build();
+    orderService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping
-  public ResponseEntity<?> saveOrder(@RequestBody OrderDto order) {
-    boolean result = orderService.createOrder(order);
-    if (result) {
-      return ResponseEntity.ok().build();
-    }
-    throw new IllegalArgumentException("주문 정보가 정확하지 않습니다.");
+  public ResponseEntity<Void> saveOrder(@RequestBody OrderDto order) {
+    int createdId = orderService.createOrder(order);
+    URI location = URI.create("/api/items/" + createdId);
+    return ResponseEntity.created(location).build();
   }
 
   @PatchMapping("/{id}/status")

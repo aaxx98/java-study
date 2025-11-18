@@ -15,9 +15,9 @@ public interface OrderDao {
 
   OrderDto findOrderById(@Param("orderId") int orderId);
 
-  void deleteById(@Param("id") int id);
+  int deleteById(@Param("id") int id);
 
-  void registerOrder(OrderDto order);
+  int registerOrder(OrderDto order);
 
   int updateOrderStatus(OrderDto dto);
 }

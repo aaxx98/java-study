@@ -1,5 +1,6 @@
 package com.mycom.myapp.orderItem.service;
 
+import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.order.dao.OrderDao;
 import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.orderItem.dao.OrderItemDao;
@@ -22,6 +23,9 @@ public class OrderItemService {
   public OrderItemListDto getOrderItemListByOrderId(int orderId) {
     List<OrderItemDto> list = orderItemDao.findOrderItemsByOrderId(orderId);
     OrderDto orderInfo = orderDao.findOrderById(orderId);
+    if (orderInfo == null) {
+      throw new NotFoundException("주문 정보를 찾을 수 없습니다.");
+    }
 
     OrderItemListDto response = new OrderItemListDto();
     response.setList(list);

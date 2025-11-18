@@ -23,13 +23,8 @@ public class StockController {
   }
 
   @GetMapping
-  public ResponseEntity<?> getStockList(@ModelAttribute PageRequestDto requestDto) {
-    if (requestDto.getPage() < 1 || requestDto.getPageSize() < 1) {
-      throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
-    }
+  public ResponseEntity<StockListDto> getStockList(@ModelAttribute PageRequestDto requestDto) {
     StockListDto listDto = stockService.getStockList(requestDto);
-
     return ResponseEntity.ok(listDto);
   }
-
 }

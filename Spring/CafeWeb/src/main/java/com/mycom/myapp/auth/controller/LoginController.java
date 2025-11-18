@@ -6,8 +6,6 @@ import com.mycom.myapp.user.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
-import java.util.Optional;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,25 +26,17 @@ public class LoginController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<?> getUserBySessionId(HttpServletRequest request) {
-    Optional<UserDto> user = loginService.getUserBySessionId(request);
-    if (user.isPresent()) {
-      return ResponseEntity.ok(user);
-    }
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(Map.of("message", "로그인 한 후 사용 가능합니다."));
+  public ResponseEntity<UserDto> getUserBySessionId(HttpServletRequest request) {
+    UserDto user = loginService.getUserBySessionId(request);
+    return ResponseEntity.ok(user);
   }
 
   @PostMapping("/login")
   public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest,
       HttpServletRequest request) {
-    Optional<UserDto> user = loginService.login(loginRequest);
-    if (user.isPresent()) {
-      HttpSession session = request.getSession(true); // 없으면 새로 생성
-      session.setAttribute("userDto", user.get());
-      return ResponseEntity.ok(Map.of("message", "로그인 성공"));
-    }
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(Map.of("message", "아이디 또는 비밀번호 오류"));
+    UserDto user = loginService.login(loginRequest);
+    HttpSession session = request.getSession(true); // 없으면 새로 생성
+    session.setAttribute("userDto", user);
+    return ResponseEntity.ok(Map.of("message", "로그인 성공"));
   }
 }

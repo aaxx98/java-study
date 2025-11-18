@@ -1,6 +1,8 @@
 package com.mycom.myapp.product.service;
 
 import com.mycom.myapp.common.dto.PageRequestDto;
+import com.mycom.myapp.common.exception.BadRequestException;
+import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.product.dao.ProductDao;
 import com.mycom.myapp.product.dto.ProductDto;
 import com.mycom.myapp.product.dto.ProductListDto;
@@ -23,6 +25,10 @@ public class ProductService {
   }
 
   public ProductListDto getProductList(PageRequestDto request) {
+    if (request.getPage() < 1 || request.getPageSize() < 1) {
+      throw new BadRequestException("page와 pageSize는 1 이상의 값이어야 합니다.");
+    }
+
     List<ProductDto> list = productDao.findAllProducts(request);
     int totalCount = productDao.countAll(request);
     int totalPages = (int) Math.ceil((double) totalCount / request.getPageSize());
@@ -35,39 +41,55 @@ public class ProductService {
     return response;
   }
 
-  public boolean deleteById(int id) {
+  public void deleteById(int id) {
     ProductDto product = productDao.findById(id);
-    if (product != null) {
-      StockDto existStock = stockDao.findByProductId(id);
-      if (existStock != null) {
-        throw new IllegalStateException("해당 상품은 재고가 있어서 삭제할 수 없습니다.");
-      }
-      return productDao.deleteById(id) > 0;
+    if (product == null) {
+      throw new NotFoundException("상품을 찾을 수 없습니다.");
     }
-    return false;
+
+    StockDto existStock = stockDao.findByProductId(id);
+    if (existStock != null) {
+      throw new IllegalStateException("해당 상품은 재고가 있어서 삭제할 수 없습니다.");
+    }
+    int deleted = productDao.deleteById(id);
+    if (deleted <= 0) {
+      throw new IllegalStateException("상품 삭제에 실패했습니다.");
+    }
   }
 
   @Transactional
-  public boolean updateProduct(int id, ProductDto product) {
+  public void updateProduct(int id, ProductDto product) {
+    if (product.getName() == null || product.getCategory() == null) {
+      throw new BadRequestException("request에는 name, category를 포함하여야 합니다.");
+    }
+
+    ProductDto exist = productDao.findById(id);
+    if (exist == null) {
+      throw new NotFoundException("상품을 찾을 수 없습니다.");
+    }
+
     product.setId(id);
 
     if (product.isStockManage()) {
-      int productId = product.getId();
-      StockDto existStock = stockDao.findByProductId(productId);
-      if (existStock == null) {
-        StockDto stock = new StockDto();
-        stock.setProductId(productId);
+      StockDto stock = stockDao.findByProductId(id);
+      if (stock == null) {
+        stock = new StockDto();
+        stock.setProductId(id);
         stockDao.initStock(stock);
       }
     }
-    return productDao.updateProduct(product) > 0;
+
+    int updated = productDao.updateProduct(product);
+    if (updated <= 0) {
+      throw new IllegalStateException("상품 수정에 실패했습니다.");
+    }
   }
 
   @Transactional
   public int createProduct(ProductDto product) {
     int inserted = productDao.registerProduct(product);
     if (inserted <= 0) {
-      throw new IllegalStateException("상품 생성 실패");
+      throw new IllegalStateException("상품 생성에 실패했습니다.");
     }
 
     if (product.isStockManage()) {
@@ -80,14 +102,15 @@ public class ProductService {
     return product.getId();
   }
 
-  public boolean updateStock(int id, StockUpdateDto stock) {
+  public void updateStock(int id, StockUpdateDto stock) {
     stock.setProductId(id);
     StockDto existStock = stockDao.findByProductId(id);
     if (existStock == null) {
-      return false;
+      throw new NotFoundException("재고 데이터를 찾을 수 없습니다. 상품의 재고 관리 여부 설정을 확인해주세요.");
     }
-
-    stockDao.updateStockQuantity(stock);
-    return true;
+    int updated = stockDao.updateStockQuantity(stock);
+    if (updated <= 0) {
+      throw new IllegalStateException("상품 재고 추가에 실패했습니다.");
+    }
   }
 }

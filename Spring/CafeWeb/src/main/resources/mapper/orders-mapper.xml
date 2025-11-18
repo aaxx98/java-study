@@ -35,10 +35,10 @@
     GROUP BY o.id, o.status
   </select>
 
-  <select id="deleteById" parameterType="int">
+  <delete id="deleteById" parameterType="int">
     DELETE FROM Orders
     WHERE id = #{id}
-  </select>
+  </delete>
 
   <insert id="registerOrder" parameterType="com.mycom.myapp.order.dto.OrderDto"
     useGeneratedKeys="true"

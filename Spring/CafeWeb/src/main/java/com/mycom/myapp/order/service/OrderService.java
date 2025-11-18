@@ -1,6 +1,8 @@
 package com.mycom.myapp.order.service;
 
 import com.mycom.myapp.common.dto.PageRequestDto;
+import com.mycom.myapp.common.exception.BadRequestException;
+import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.order.dao.OrderDao;
 import com.mycom.myapp.order.dto.OrderDto;
 import com.mycom.myapp.order.dto.OrderListDto;
@@ -27,6 +29,10 @@ public class OrderService {
   }
 
   public OrderListDto getOrderList(PageRequestDto request) {
+    if (request.getPage() < 1 || request.getPageSize() < 1) {
+      throw new IllegalArgumentException("page와 pageSize는 1 이상의 값이어야 합니다.");
+    }
+
     List<OrderDto> list = orderDao.findAllOrders(request);
     int totalCount = orderDao.countAll();
     int totalPages = (int) Math.ceil((double) totalCount / request.getPageSize());
@@ -40,44 +46,65 @@ public class OrderService {
   }
 
   public OrderDto getOrderById(int orderId) {
-    return orderDao.findOrderById(orderId);
-  }
-
-  @Transactional
-  public boolean deleteById(int id) {
-    OrderDto order = orderDao.findOrderById(id);
-    if (order != null) {
-      orderItemDao.deleteByOrderId(id);
-      orderDao.deleteById(id);
-      return true;
+    OrderDto order = orderDao.findOrderById(orderId);
+    if (order == null) {
+      throw new NotFoundException("주문을 찾을 수 없습니다.");
     }
-    return false;
+    return order;
   }
 
   @Transactional
-  public boolean createOrder(OrderDto order) {
+  public void deleteById(int id) {
+    OrderDto order = orderDao.findOrderById(id);
+    if (order == null) {
+      throw new NotFoundException("주문을 찾을 수 없습니다.");
+    }
+    orderItemDao.deleteByOrderId(id);
+    int deleted = orderDao.deleteById(id);
+    if (deleted <= 0) {
+      throw new IllegalStateException("주문 삭제에 실패했습니다.");
+    }
+  }
+
+  @Transactional
+  public int createOrder(OrderDto order) {
     OrderDto saveOrder = new OrderDto();
     saveOrder.setStatus("ORDER");
     saveOrder.setOrderDate(LocalDate.now());
-    orderDao.registerOrder(saveOrder);
+    int inserted = orderDao.registerOrder(saveOrder);
+    if (inserted <= 0) {
+      throw new IllegalStateException("주문 생성에 실패했습니다.");
+    }
     int orderId = saveOrder.getId();
 
     for (OrderItemDto item : order.getOrderItems()) {
       ProductDto product = productDao.findById(item.getProductId());
       if (product == null) {
-        return false;
+        throw new BadRequestException(
+            "주문 불가능한 상품이 주문 목록에 포함되어있습니다. [productId: " + item.getProductId() + "]");
       }
       item.setOrderId(orderId);
       item.setPrice(product.getPrice() * item.getQuantity());
-      orderItemDao.registerOrderItem(item);
+      int insertedItem = orderItemDao.registerOrderItem(item);
+      if (insertedItem <= 0) {
+        throw new IllegalStateException("주문 생성에 실패했습니다.");
+      }
     }
-    return true;
+    return saveOrder.getId();
   }
 
-  public boolean updateOrderStatus(int id, String status) {
+  public void updateOrderStatus(int id, String status) {
+    OrderDto order = orderDao.findOrderById(id);
+    if (order == null) {
+      throw new NotFoundException("주문을 찾을 수 없습니다.");
+    }
+
     OrderDto dto = new OrderDto();
     dto.setId(id);
     dto.setStatus(status);
-    return orderDao.updateOrderStatus(dto) > 0;
+    int updated = orderDao.updateOrderStatus(dto);
+    if (updated <= 0) {
+      throw new IllegalStateException("주문 상태 변경에 실패했습니다.");
+    }
   }
 }
