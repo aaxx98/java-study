@@ -1,0 +1,47 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.7'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'my'
+version = '0.0.1-SNAPSHOT'
+description = 'JPA Project'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+
+//    // Spring Web
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+//
+//    // Spring Data JPA
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//
+//    // Database Driver(예: MySQL)
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//
+//    // Lombok
+//    compileOnly 'org.projectlombok:lombok'
+//    annotationProcessor 'org.projectlombok:lombok'
+//
+//    // Test
+//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
