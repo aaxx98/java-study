@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+// JWT + Spring Security로 전환하면 LoginInterceptor는 더이상 필요하지 않음
+// JwtAuthenticationFilter에서 토큰 검사 실시
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
 

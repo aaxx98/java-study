@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface UserDao {
 
-  void registerUser(UserDto user);
+  int registerUser(UserDto user);
 }

@@ -5,12 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto {
+public class ResponseRegisterDto {
 
-  private Long id;
   private String name;
   private String email;
-  private String password;
-//  private LocalDate createdAt;
-//  private LocalDate updatedAt;
+  private String status;
 }

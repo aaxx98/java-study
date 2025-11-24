@@ -1,11 +1,10 @@
 package com.mycom.myapp.auth.controller;
 
 import com.mycom.myapp.auth.dto.LoginRequestDto;
+import com.mycom.myapp.auth.dto.LoginResponseDto;
 import com.mycom.myapp.auth.service.LoginService;
 import com.mycom.myapp.user.dto.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,11 +31,8 @@ public class LoginController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest,
-      HttpServletRequest request) {
-    UserDto user = loginService.login(loginRequest);
-    HttpSession session = request.getSession(true); // 없으면 새로 생성
-    session.setAttribute("userDto", user);
-    return ResponseEntity.ok(Map.of("message", "로그인 성공"));
+  public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
+    LoginResponseDto loginSuccess = loginService.login(loginRequest);
+    return ResponseEntity.ok(loginSuccess);
   }
 }
