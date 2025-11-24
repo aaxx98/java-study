@@ -40,7 +40,6 @@ public class SecurityConfig {
 
     http
         .csrf(AbstractHttpConfigurer::disable)
-//        .cors(cors -> cors.configurationSource(corsConfig()))
         .exceptionHandling(e -> e.authenticationEntryPoint(entryPoint))
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
@@ -51,18 +50,4 @@ public class SecurityConfig {
 
     return http.build();
   }
-
-  // vite의 프록시 설정을 사용하므로 개발환경에서 불필요하여 주석처리
-//  @Bean
-//  public CorsConfigurationSource corsConfig() {
-//    CorsConfiguration config = new CorsConfiguration();
-//    config.setAllowedOrigins(List.of("http://localhost:5173"));
-//    config.setAllowedMethods(List.of("*"));
-//    config.setAllowedHeaders(List.of("*"));
-//    config.setAllowCredentials(true);
-//
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", config);
-//    return source;
-//  }
 }
