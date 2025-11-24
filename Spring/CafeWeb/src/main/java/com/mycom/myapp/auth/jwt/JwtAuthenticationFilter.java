@@ -4,6 +4,7 @@ import com.mycom.myapp.auth.dao.LoginDao;
 import com.mycom.myapp.user.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,20 +30,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       FilterChain chain)
       throws ServletException, IOException {
 
-    String header = request.getHeader("Authorization");
+    String token = null;
 
-    if (header != null && header.startsWith("Bearer ")) {
-      String token = header.substring(7);
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals("accessToken")) {
+          token = cookie.getValue();
+        }
+      }
+    }
 
+    if (token != null) {
       provider.validate(token);
 
       String email = provider.getUserEmail(token);
       UserDto user = loginDao.findUserByEmail(email);
+      user.setPassword(null);
 
       // 현재 들어온 요청을 처리하는 동안에만 인증 정보를 임시로 저장(스프링 시큐리티), 요청 처리에 필요시 사용함
       UsernamePasswordAuthenticationToken auth =
           new UsernamePasswordAuthenticationToken(user, null, null);
-
       SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
