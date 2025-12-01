@@ -5,8 +5,10 @@ import com.mycom.myapp.common.exception.BadRequestException;
 import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.common.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -50,6 +52,28 @@ class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST.value(),
         HttpStatus.BAD_REQUEST.getReasonPhrase(),
         ex.getMessage(),
+        request.getRequestURI()
+    );
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationException(
+      MethodArgumentNotValidException ex,
+      HttpServletRequest request) {
+
+    // 검증 실패한 필드 메시지 추출
+    String message = ex.getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .map(error -> error.getField() + ": " + error.getDefaultMessage())
+        .collect(Collectors.joining(", "));
+
+    ErrorResponse error = new ErrorResponse(
+        HttpStatus.BAD_REQUEST.value(),
+        HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        message,
         request.getRequestURI()
     );
 

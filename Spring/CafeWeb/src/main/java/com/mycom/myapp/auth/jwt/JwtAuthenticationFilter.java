@@ -1,6 +1,6 @@
 package com.mycom.myapp.auth.jwt;
 
-import com.mycom.myapp.auth.dao.LoginDao;
+import com.mycom.myapp.user.dao.UserDao;
 import com.mycom.myapp.user.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,11 +17,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider provider;
-  private final LoginDao loginDao;
+  private final UserDao userDao;
 
-  public JwtAuthenticationFilter(JwtTokenProvider provider, LoginDao loginDao) {
+  public JwtAuthenticationFilter(JwtTokenProvider provider, UserDao userDao) {
     this.provider = provider;
-    this.loginDao = loginDao;
+    this.userDao = userDao;
   }
 
   @Override
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       provider.validate(token);
 
       String email = provider.getUserEmail(token);
-      UserDto user = loginDao.findUserByEmail(email);
+      UserDto user = userDao.findUserByEmail(email);
       user.setPassword(null);
 
       // 현재 들어온 요청을 처리하는 동안에만 인증 정보를 임시로 저장(스프링 시큐리티), 요청 처리에 필요시 사용함
