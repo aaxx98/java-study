@@ -5,13 +5,15 @@
 
 <mapper namespace="com.mycom.myapp.user.dao.UserDao">
 
-  <select id="findUserByEmail" parameterType="string" resultType="com.mycom.myapp.user.dto.UserDto">
+  <select id="findUserByEmail" parameterType="string"
+    resultType="com.mycom.myapp.user.dto.UserResponse">
     select id, name, email, password
     from user
     where email = #{email}
   </select>
 
-  <insert id="registerUser" parameterType="com.mycom.myapp.user.dto.UserDto" useGeneratedKeys="true"
+  <insert id="registerUser" parameterType="com.mycom.myapp.user.dto.RegisterRequest"
+    useGeneratedKeys="true"
     keyProperty="id">
     INSERT INTO user (name, email, password)
     VALUES (#{name}, #{email}, #{password})

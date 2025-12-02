@@ -1,13 +1,13 @@
 package com.mycom.myapp.auth.service;
 
-import com.mycom.myapp.auth.dto.LoginRequestDto;
-import com.mycom.myapp.auth.dto.LoginResponseDto;
+import com.mycom.myapp.auth.dto.LoginRequest;
+import com.mycom.myapp.auth.dto.LoginResponse;
 import com.mycom.myapp.auth.jwt.JwtTokenProvider;
 import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.common.exception.UnauthorizedException;
 import com.mycom.myapp.user.dao.UserDao;
-import com.mycom.myapp.user.dto.ResponseRegisterDto;
-import com.mycom.myapp.user.dto.UserDto;
+import com.mycom.myapp.user.dto.RegisterResponse;
+import com.mycom.myapp.user.dto.UserResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +25,8 @@ public class LoginService {
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
-  public LoginResponseDto login(LoginRequestDto loginInfo) {
-    UserDto userInfo = userDao.findUserByEmail(loginInfo.getEmail());
+  public LoginResponse login(LoginRequest loginInfo) {
+    UserResponse userInfo = userDao.findUserByEmail(loginInfo.getEmail());
     if (userInfo == null) {
       throw new NotFoundException("가입되지 않은 사용자입니다.");
     }
@@ -35,9 +35,9 @@ public class LoginService {
     }
     String token = jwtTokenProvider.createToken(userInfo.getId(), userInfo.getEmail(),
         userInfo.getName());
-    LoginResponseDto loginSuccess = new LoginResponseDto(token);
+    LoginResponse loginSuccess = new LoginResponse(token);
 
-    ResponseRegisterDto responseUser = new ResponseRegisterDto();
+    RegisterResponse responseUser = new RegisterResponse();
     responseUser.setStatus("Login Success");
     responseUser.setName(userInfo.getName());
     responseUser.setEmail(userInfo.getEmail());

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PageRequestDto {
+public class PageRequest {
 
   private int page = 1;
   private int pageSize = 30;

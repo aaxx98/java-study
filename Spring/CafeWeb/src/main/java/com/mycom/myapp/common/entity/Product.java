@@ -1,11 +1,11 @@
-package com.mycom.myapp.product.dto;
+package com.mycom.myapp.common.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-public class ProductDto {
+@Data
+@Builder
+public class Product {
 
   private int id;
   private String name;

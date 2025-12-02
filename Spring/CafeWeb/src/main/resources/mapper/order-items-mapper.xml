@@ -3,13 +3,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.myapp.orderItem.dao.OrderItemDao">
 
-  <resultMap id="OrderItemResultMap" type="com.mycom.myapp.orderItem.dto.OrderItemDto">
+  <resultMap id="OrderItemResultMap" type="com.mycom.myapp.orderItem.dto.OrderItemResponse">
     <id property="id" column="id"/>
     <result property="orderId" column="order_id"/>
     <result property="quantity" column="quantity"/>
     <result property="price" column="price"/>
 
-    <association property="product" javaType="com.mycom.myapp.product.dto.ProductDto">
+    <association property="product" javaType="com.mycom.myapp.product.dto.ProductResponse">
       <id property="id" column="product_id"/>
       <result property="name" column="product_name"/>
       <result property="category" column="product_category"/>
@@ -37,7 +37,7 @@
     WHERE order_id = #{orderId}
   </select>
 
-  <insert id="registerOrderItem" parameterType="com.mycom.myapp.orderItem.dto.OrderItemDto"
+  <insert id="registerOrderItem" parameterType="com.mycom.myapp.common.entity.OrderItem"
     useGeneratedKeys="true"
     keyProperty="id">
     INSERT INTO OrderItems (order_id, product_id, quantity, price)

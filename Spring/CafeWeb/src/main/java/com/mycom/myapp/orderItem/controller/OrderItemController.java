@@ -1,6 +1,6 @@
 package com.mycom.myapp.orderItem.controller;
 
-import com.mycom.myapp.orderItem.dto.OrderItemListDto;
+import com.mycom.myapp.orderItem.dto.OrderItemListResponse;
 import com.mycom.myapp.orderItem.service.OrderItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,8 @@ public class OrderItemController {
   }
 
   @GetMapping("/{orderId}")
-  public ResponseEntity<OrderItemListDto> getOrderList(@PathVariable int orderId) {
-    OrderItemListDto listDto = orderItemService.getOrderItemListByOrderId(orderId);
+  public ResponseEntity<OrderItemListResponse> getOrderList(@PathVariable int orderId) {
+    OrderItemListResponse listDto = orderItemService.getOrderItemListByOrderId(orderId);
     return ResponseEntity.ok(listDto);
   }
 }

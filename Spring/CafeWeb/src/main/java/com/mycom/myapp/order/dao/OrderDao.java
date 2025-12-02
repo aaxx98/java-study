@@ -1,7 +1,8 @@
 package com.mycom.myapp.order.dao;
 
-import com.mycom.myapp.common.dto.PageRequestDto;
-import com.mycom.myapp.order.dto.OrderDto;
+import com.mycom.myapp.common.dto.PageRequest;
+import com.mycom.myapp.common.entity.Order;
+import com.mycom.myapp.order.dto.OrderResponse;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,15 +10,15 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface OrderDao {
 
-  List<OrderDto> findAllOrders(PageRequestDto req);
+  List<OrderResponse> findAllOrders(PageRequest req);
 
   int countAll();
 
-  OrderDto findOrderById(@Param("orderId") int orderId);
+  OrderResponse findOrderById(@Param("orderId") int orderId);
 
   int deleteById(@Param("id") int id);
 
-  int registerOrder(OrderDto order);
+  int registerOrder(Order order);
 
-  int updateOrderStatus(OrderDto dto);
+  int updateOrderStatus(Order order);
 }

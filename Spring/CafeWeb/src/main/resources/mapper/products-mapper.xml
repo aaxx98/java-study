@@ -3,13 +3,14 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.myapp.product.dao.ProductDao">
 
-  <select id="findById" parameterType="int" resultType="com.mycom.myapp.product.dto.ProductDto">
+  <select id="findById" parameterType="int"
+    resultType="com.mycom.myapp.product.dto.ProductResponse">
     select id, name, category, price
     from Products
     where id = #{id}
   </select>
 
-  <select id="findAllProducts" resultType="com.mycom.myapp.product.dto.ProductDto">
+  <select id="findAllProducts" resultType="com.mycom.myapp.product.dto.ProductResponse">
     select id, name, category, price
     from Products
     <if test="keyword != null and keyword != ''">
@@ -34,14 +35,14 @@
     WHERE id = #{id}
   </delete>
 
-  <insert id="registerProduct" parameterType="com.mycom.myapp.product.dto.ProductDto"
+  <insert id="registerProduct" parameterType="com.mycom.myapp.common.entity.Product"
     useGeneratedKeys="true"
     keyProperty="id">
     INSERT INTO Products (name, category, price, stock_manage)
     VALUES (#{name}, #{category}, #{price}, #{stockManage})
   </insert>
 
-  <update id="updateProduct" parameterType="com.mycom.myapp.product.dto.ProductDto">
+  <update id="updateProduct" parameterType="com.mycom.myapp.common.entity.Product">
     UPDATE Products
     SET name = #{name},
     category = #{category},

@@ -1,10 +1,11 @@
 package com.mycom.myapp.product.controller;
 
-import com.mycom.myapp.common.dto.PageRequestDto;
-import com.mycom.myapp.product.dto.ProductDto;
-import com.mycom.myapp.product.dto.ProductListDto;
+import com.mycom.myapp.common.dto.PageRequest;
+import com.mycom.myapp.product.dto.CreateProductRequest;
+import com.mycom.myapp.product.dto.ProductListResponse;
+import com.mycom.myapp.product.dto.UpdateProductRequest;
 import com.mycom.myapp.product.service.ProductService;
-import com.mycom.myapp.stock.dto.StockUpdateDto;
+import com.mycom.myapp.stock.dto.StockUpdateRequest;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,9 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<ProductListDto> getProductList(@ModelAttribute PageRequestDto requestDto) {
-    ProductListDto listDto = productService.getProductList(requestDto);
+  public ResponseEntity<ProductListResponse> getProductList(
+      @ModelAttribute PageRequest requestDto) {
+    ProductListResponse listDto = productService.getProductList(requestDto);
     return ResponseEntity.ok(listDto);
   }
 
@@ -43,21 +45,23 @@ public class ProductController {
   }
 
   @PostMapping
-  public ResponseEntity<Void> saveProduct(@RequestBody ProductDto product) {
+  public ResponseEntity<Void> saveProduct(@RequestBody CreateProductRequest product) {
     int createdId = productService.createProduct(product);
     URI location = URI.create("/api/products/" + createdId);
     return ResponseEntity.created(location).build();
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Void> updateProduct(@PathVariable int id, @RequestBody ProductDto product) {
-    productService.updateProduct(id, product);
+  public ResponseEntity<Void> updateProduct(@PathVariable int id,
+      @RequestBody UpdateProductRequest product) {
+    product.setId(id);
+    productService.updateProduct(product);
     return ResponseEntity.noContent().build();
   }
 
   @PatchMapping("/{id}/stock")
   public ResponseEntity<Void> patchStockQuantity(
-      @PathVariable int id, @RequestBody StockUpdateDto stock) {
+      @PathVariable int id, @RequestBody StockUpdateRequest stock) {
     productService.updateStock(id, stock);
     return ResponseEntity.noContent().build();
   }

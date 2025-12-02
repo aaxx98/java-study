@@ -1,8 +1,10 @@
 package com.mycom.myapp.stock.dao;
 
-import com.mycom.myapp.common.dto.PageRequestDto;
-import com.mycom.myapp.stock.dto.StockDto;
-import com.mycom.myapp.stock.dto.StockUpdateDto;
+import com.mycom.myapp.common.dto.PageRequest;
+import com.mycom.myapp.common.entity.Stock;
+import com.mycom.myapp.stock.dto.StockResponse;
+import com.mycom.myapp.stock.dto.StockResponseWithProductName;
+import com.mycom.myapp.stock.dto.StockUpdateRequest;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,13 +12,13 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface StockDao {
 
-  List<StockDto> findAllStocks(PageRequestDto req);
+  List<StockResponseWithProductName> findAllStocks(PageRequest req);
 
   int countAll();
 
-  StockDto findByProductId(@Param("productId") int productId);
+  StockResponse findByProductId(@Param("productId") int productId);
 
-  int updateStockQuantity(StockUpdateDto stock);
+  int updateStockQuantity(StockUpdateRequest stock);
 
-  void initStock(StockDto stock);
+  void initStock(Stock stock);
 }

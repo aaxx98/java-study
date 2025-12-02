@@ -1,7 +1,7 @@
 package com.mycom.myapp.user.controller;
 
 import com.mycom.myapp.user.dto.RegisterRequest;
-import com.mycom.myapp.user.dto.ResponseRegisterDto;
+import com.mycom.myapp.user.dto.RegisterResponse;
 import com.mycom.myapp.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<ResponseRegisterDto> register(@Valid @RequestBody RegisterRequest user) {
-    ResponseRegisterDto result = userService.registerUser(user);
+  public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest user) {
+    RegisterResponse result = userService.registerUser(user);
     return ResponseEntity.ok(result);
   }
 }

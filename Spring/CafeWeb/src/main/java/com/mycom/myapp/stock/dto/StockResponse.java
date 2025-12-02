@@ -5,8 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StockUpdateDto {
+public class StockResponse {
 
+  private int id;
   private int productId;
-  private int add;
+  private String quantity;
 }
+

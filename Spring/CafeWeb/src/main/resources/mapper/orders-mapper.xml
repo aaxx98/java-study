@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.myapp.order.dao.OrderDao">
 
-  <select id="findAllOrders" resultType="com.mycom.myapp.order.dto.OrderDto">
+  <select id="findAllOrders" resultType="com.mycom.myapp.order.dto.OrderResponse">
     SELECT
     o.id,
     COALESCE(SUM(oi.quantity), 0) AS totalQuantity,
@@ -22,7 +22,8 @@
     from Orders
   </select>
 
-  <select id="findOrderById" parameterType="int" resultType="com.mycom.myapp.order.dto.OrderDto">
+  <select id="findOrderById" parameterType="int"
+    resultType="com.mycom.myapp.order.dto.OrderResponse">
     SELECT
     o.id,
     COALESCE(SUM(oi.quantity), 0) AS totalQuantity,
@@ -40,14 +41,14 @@
     WHERE id = #{id}
   </delete>
 
-  <insert id="registerOrder" parameterType="com.mycom.myapp.order.dto.OrderDto"
+  <insert id="registerOrder" parameterType="com.mycom.myapp.common.entity.Order"
     useGeneratedKeys="true"
     keyProperty="id">
     INSERT INTO Orders (order_date, status)
     VALUES (#{orderDate}, #{status})
   </insert>
 
-  <update id="updateOrderStatus" parameterType="com.mycom.myapp.order.dto.OrderDto">
+  <update id="updateOrderStatus" parameterType="com.mycom.myapp.common.entity.Order">
     UPDATE Orders
     SET status = #{status}
     WHERE id = #{id}

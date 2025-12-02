@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseListDto {
+public class PageResponse {
 
   private int totalCount;
   private int totalPages;

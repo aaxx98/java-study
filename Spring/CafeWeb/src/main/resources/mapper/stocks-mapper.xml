@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mycom.myapp.stock.dao.StockDao">
-  <select id="findAllStocks" resultType="com.mycom.myapp.stock.dto.StockDto">
+  <select id="findAllStocks" resultType="com.mycom.myapp.stock.dto.StockResponseWithProductName">
     select s.id, s.product_id, p.name as product_name, s.quantity
     from Stocks as s
     LEFT JOIN Products p ON p.id = s.product_id
@@ -16,19 +16,20 @@
     LEFT JOIN Products p ON p.id = s.product_id
   </select>
 
-  <select id="findByProductId" parameterType="int" resultType="com.mycom.myapp.stock.dto.StockDto">
+  <select id="findByProductId" parameterType="int"
+    resultType="com.mycom.myapp.stock.dto.StockResponse">
     select id, product_id, quantity
     from Stocks
     where product_id = #{productId}
   </select>
 
-  <update id="updateStockQuantity" parameterType="com.mycom.myapp.stock.dto.StockUpdateDto">
+  <update id="updateStockQuantity" parameterType="com.mycom.myapp.stock.dto.StockUpdateRequest">
     UPDATE Stocks
     SET quantity = quantity + #{add}
     WHERE product_id = #{productId}
   </update>
 
-  <insert id="initStock" parameterType="com.mycom.myapp.stock.dto.StockDto">
+  <insert id="initStock" parameterType="com.mycom.myapp.common.entity.Stock">
     INSERT INTO Stocks (product_id, quantity)
     VALUES (#{productId}, 0)
   </insert>

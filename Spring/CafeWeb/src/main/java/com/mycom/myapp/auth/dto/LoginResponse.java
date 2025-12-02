@@ -1,17 +1,17 @@
 package com.mycom.myapp.auth.dto;
 
-import com.mycom.myapp.user.dto.ResponseRegisterDto;
+import com.mycom.myapp.user.dto.RegisterResponse;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponseDto {
+public class LoginResponse {
 
   private String accessToken;
-  private ResponseRegisterDto user;
+  private RegisterResponse user;
 
-  public LoginResponseDto(String accessToken) {
+  public LoginResponse(String accessToken) {
     this.accessToken = accessToken;
   }
 }

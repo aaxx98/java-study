@@ -1,10 +1,10 @@
 package com.mycom.myapp.auth.controller;
 
-import com.mycom.myapp.auth.dto.LoginRequestDto;
-import com.mycom.myapp.auth.dto.LoginResponseDto;
+import com.mycom.myapp.auth.dto.LoginRequest;
+import com.mycom.myapp.auth.dto.LoginResponse;
 import com.mycom.myapp.auth.service.LoginService;
-import com.mycom.myapp.user.dto.ResponseRegisterDto;
-import com.mycom.myapp.user.dto.UserDto;
+import com.mycom.myapp.user.dto.RegisterResponse;
+import com.mycom.myapp.user.dto.UserResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +29,15 @@ public class LoginController {
   }
 
   @GetMapping("/me")
-  public ResponseEntity<UserDto> getUser() {
+  public ResponseEntity<UserResponse> getUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    UserDto user = (UserDto) auth.getPrincipal();
+    UserResponse user = (UserResponse) auth.getPrincipal();
     return ResponseEntity.ok(user);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<ResponseRegisterDto> login(@RequestBody LoginRequestDto loginRequest) {
-    LoginResponseDto loginSuccess = loginService.login(loginRequest);
+  public ResponseEntity<RegisterResponse> login(@RequestBody LoginRequest loginRequest) {
+    LoginResponse loginSuccess = loginService.login(loginRequest);
 
     // HttpOnly 쿠키 생성
     ResponseCookie cookie = ResponseCookie.from("accessToken", loginSuccess.getAccessToken())

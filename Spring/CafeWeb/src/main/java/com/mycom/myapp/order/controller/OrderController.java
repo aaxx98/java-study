@@ -1,11 +1,12 @@
 package com.mycom.myapp.order.controller;
 
-import com.mycom.myapp.common.dto.PageRequestDto;
-import com.mycom.myapp.order.dto.OrderDto;
-import com.mycom.myapp.order.dto.OrderListDto;
+import com.mycom.myapp.common.dto.PageRequest;
+import com.mycom.myapp.order.dto.CreateOrderRequest;
+import com.mycom.myapp.order.dto.OrderListResponse;
+import com.mycom.myapp.order.dto.OrderResponse;
+import com.mycom.myapp.order.dto.UpdateOrderStateRequest;
 import com.mycom.myapp.order.service.OrderService;
 import java.net.URI;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,14 +31,14 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<OrderListDto> getOrderList(@ModelAttribute PageRequestDto requestDto) {
-    OrderListDto listDto = orderService.getOrderList(requestDto);
+  public ResponseEntity<OrderListResponse> getOrderList(@ModelAttribute PageRequest request) {
+    OrderListResponse listDto = orderService.getOrderList(request);
     return ResponseEntity.ok(listDto);
   }
 
   @GetMapping("/{orderId}")
-  public ResponseEntity<OrderDto> getOrderById(@PathVariable int orderId) {
-    OrderDto order = orderService.getOrderById(orderId);
+  public ResponseEntity<OrderResponse> getOrderById(@PathVariable int orderId) {
+    OrderResponse order = orderService.getOrderById(orderId);
     return ResponseEntity.ok(order);
   }
 
@@ -48,8 +49,8 @@ public class OrderController {
   }
 
   @PostMapping
-  public ResponseEntity<Void> saveOrder(@RequestBody OrderDto order) {
-    int createdId = orderService.createOrder(order);
+  public ResponseEntity<Void> saveOrder(@RequestBody CreateOrderRequest request) {
+    int createdId = orderService.createOrder(request);
     URI location = URI.create("/api/items/" + createdId);
     return ResponseEntity.created(location).build();
   }
@@ -57,10 +58,10 @@ public class OrderController {
   @PatchMapping("/{id}/status")
   public ResponseEntity<Void> updateOrderStatus(
       @PathVariable int id,
-      @RequestBody Map<String, String> request
+      @RequestBody UpdateOrderStateRequest request
   ) {
-    String status = request.get("status");
-    orderService.updateOrderStatus(id, status);
+    request.setId(id);
+    orderService.updateOrderStatus(request);
     return ResponseEntity.ok().build();
   }
 }
