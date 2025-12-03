@@ -6,14 +6,17 @@ import com.mycom.myapp.common.exception.NotFoundException;
 import com.mycom.myapp.common.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+
 // Controller 예외 처리
 @RestControllerAdvice
+@Slf4j
 public
 class GlobalExceptionHandler {
 
@@ -84,7 +87,8 @@ class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleGeneral(Exception ex,
       HttpServletRequest request) {
 
-    ex.printStackTrace();
+    log.error("Unexpected error at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
+
     ErrorResponse error = new ErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR.value(),
         HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
