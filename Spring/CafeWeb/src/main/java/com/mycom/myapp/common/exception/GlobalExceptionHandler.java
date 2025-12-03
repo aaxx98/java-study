@@ -1,9 +1,6 @@
-package com.mycom.myapp.common;
+package com.mycom.myapp.common.exception;
 
 import com.mycom.myapp.common.dto.ErrorResponse;
-import com.mycom.myapp.common.exception.BadRequestException;
-import com.mycom.myapp.common.exception.NotFoundException;
-import com.mycom.myapp.common.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
